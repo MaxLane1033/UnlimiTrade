@@ -15,4 +15,4 @@ Lab 9 Writeup: https://docs.google.com/document/d/1eC8YVGwrS0KsNf2nM3XkxCdFqOMeH
    
 6. How to run the tests
    
-7. Link to the deployed application
+7. Link to the deployed application d
