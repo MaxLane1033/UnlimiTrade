@@ -1,0 +1,50 @@
+Question: git ignore contents - how will we keep a consistent file across all group members when a file is ignored?
+
+Header and footer content?
+
+12 things to do:
+Profile page detail
+Login page detail
+Register page detail
+Logout page detail
+CSS style 
+
+Backend 
+- post item feature stores item in an array and pastes it under posted items(LAB 4) 
+- index.js 
+
+Lab 11 testing
+
+Week 2 To do
+
+Ethan: 
+profile page up
+post item feature stores item in an array and pastes it under posted items(LAB 4) 
+
+Connor: 
+Overseeing Handlebars files (reorganizing current ones and making new ones for each page)
+Footer and Header handlebars
+
+Max: 
+Complete lab 11
+
+Ivan:
+Some of index.js
+Register
+Login
+
+Asher:
+post item feature stores item in an array and pastes it under posted items(LAB 4) 
+
+Yasir: 
+ post item feature stores item in an array and pastes it under posted items(LAB 4) 
+
+
+
+Meeting Notes:
+Make sure folder formats are fully
+ACTION ITEM: Make a release notes file that goes in the milestone submissions folder, containing updates from last week to this week
+ACTION ITEM: Copy the whole lab 8 into the projectSourceCode folder and it'll work perfectly. We’ll have a functional lab to work off of as a base
+ACTION ITEM: Implement a branching strategy so we can follow the flow of things and eliminate some of the errors we had today
+ACTION ITEM: get the new user stories we made today in recitation into GitHub
+Lab7 code is being uploaded, so now we can work off of that
