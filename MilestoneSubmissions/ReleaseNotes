@@ -1,0 +1,10 @@
+Changes made from last week to this week include:
+
+GitHub Project Board is now fully operational. User stories, epics, Todo/Completed items, etc are all implemented according to the guidelines of Lab 10.
+
+Basic files created, such as .env, docker-compose, browse.html, gitignore, index.js, etc. All of these basic file creations can be found in the GitHub repository and through the "done" tasks in our project board.
+
+With help from our TA, we're currently copying and integrating all the files from Lab 7 into our repository. 
+This will allow us to have a better base outline that people can build on. Today we struggled with many bugs, so hopefully using the Lab 7 will fix most of these basic/ground-level bugs.
+
+Lastly, we finalized our tasks and new user stories for next week, and got a better plan going for how to avoid similar errors in the future!
