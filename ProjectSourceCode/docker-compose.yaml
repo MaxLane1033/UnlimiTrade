@@ -1,0 +1,82 @@
+#Runs PostgreSQL (db) and a Node.js application (web) as separate containers
+#Ensures that the database starts before the web application
+#Allows environment variables to be stored in a .env file
+#Supports live code changes without restarting the container
+#Provides persistent database storage using Docker volumes
+
+#Docker volumes are used to persist data so that it doesn’t get erased when a container stops or restarts
+
+services:
+
+  #Database Service
+  db:
+    #This is the Postgres version we are going to be using for databasing
+    #I kept it the same from our labs because we know how to use that one
+    image: postgres:14 
+
+    #Defines the .env file that will be used and loads environment variables from .env
+    env_file: .env
+
+    #In our setup currenlty we are using the PostgreSQL/db service inside a docker container
+    #Other containers that are also being run such as web in this case can connect to db using hostname db and port 5432
+    #HOWEVER our local machines (what OS we are using) can NOT access PostgreSQL/db as expose does not allow that 
+    #If we wanted our local machines to be able to access PostgreSQL/db we would use ports instead
+
+    #We do not want external access in this case because we are keeping passwords (sensitive data)
+    #For this project we only want services within docker communicating with db
+    #5432 is the defualt port for PostgreSQL when you install it
+    expose:
+      - '5432'
+    
+    volumes:
+      #Updated name
+      #unlimitrade-db-data - This is a named volume created by Docker 
+      #It stores PostgreSQL data outside the container so that data is not lost when the container restarts
+      #/var/lib/postgresql/data - This is the path inside the container where PostgreSQL normally stores its database files
+      #Instead of storing data inside the container, we map it to unlimitrade-db-data, a persistent volume managed by Docker
+      #Even if the container is stopped, removed, or restarted, unlimitrade-db-data still holds the database files
+      #If you recreate the db container, it will still use the same unlimitrade-db-data volume, meaning your data is not lost
+
+      #we can inspect the volume like this:( docker volume inspect unlimitrade-db-data )
+      - unlimitrade-db-data:/var/lib/postgresql/data 
+      - ./init_data:/docker-entrypoint-initdb.d
+  web:
+
+    #Uses the latest long-term support (LTS) version of Node.js.
+    image: node:lts
+
+    user: 'node' #you can remove this if you are facing access issues when installing node packages
+
+    #Sets /home/node/app as the working directory inside the container
+    #When the web container starts, it runs on a Linux-based Node.js image (node:lts)
+    #By default, the container does not automatically know where to place your application files
+    #working_dir: /home/node/app tells Docker to:
+    #1: Change into /home/node/app before running any commands inside the container.
+    #2: Treat /home/node/app as the root directory for your application inside the container
+    working_dir: /home/node/app
+
+    #Defines the .env file that will be used and loads environment variables from .env
+    env_file: .env
+
+    #Sets the environment mode to "development."
+    environment:
+      - NODE_ENV=development
+
+    #This will make sure db is running first before running web
+    depends_on:
+      - db
+
+    #Maps port 3000 in the container to port 3000 on the host
+    ports:
+      - '3000:3000'
+
+    #Mounts the current directory (./) to /home/node/app inside the container, allowing live code changes.
+    volumes:
+      - ./:/home/node/app
+
+    #Runs npm start when the container starts.
+    command: 'npm start'
+
+volumes:
+  # New name for PostgreSQL data volume
+  unlimitrade-db-data: 
