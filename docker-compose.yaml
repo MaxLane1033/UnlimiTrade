@@ -6,6 +6,8 @@
 
 #Docker volumes are used to persist data so that it doesn’t get erased when a container stops or restarts
 
+version: '3.9'
+
 services:
 
   #Database Service
@@ -73,7 +75,7 @@ services:
 
     #Mounts the current directory (./) to /home/node/app inside the container, allowing live code changes.
     volumes:
-      - ./:/home/node/app
+      - .:/home/node/app
 
     #Runs npm start when the container starts.
     command: 'npm start'
