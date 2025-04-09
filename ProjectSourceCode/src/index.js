@@ -102,7 +102,13 @@ const all_courses = `
   `;
 
 app.get('/login', (req, res) => {
-  res.render('pages/login');
+  res.render('/login');
+});
+app.get('/register', (req, res) => {
+  res.render('/register');
+});
+app.get('/', (req, res) => {
+  res.redirect('/register'); //this will call the /anotherRoute route in the API
 });
 
 // Login submission
