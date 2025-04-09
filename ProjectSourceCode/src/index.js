@@ -65,44 +65,83 @@ const Users = {
   password_hash,
 };
 
-  app.get('/', (req, res) => {
-    res.redirect('/register'); 
-  });
-  
-  app.get('/login', (req, res) => {
-    res.render('pages/login');
-  });
-  
-  app.get('/register', (req, res) => {
-    res.render('pages/register');
-  });
-// Login submission
-app.post('/login', (req, res) => {
-  const { email } = req.body;
+ // -------------------------------------  ROUTES (Public)   ----------------------------------------------
 
-  const query = 'SELECT * FROM Users WHERE email = $1 LIMIT 1';
+// If someone hits "/", redirect to /register
+app.get('/', (req, res) => {
+  res.redirect('/register');
+});
+
+// Show login form
+app.get('/login', (req, res) => {
+  res.render('pages/login');
+});
+
+// Show register form
+app.get('/register', (req, res) => {
+  res.render('pages/register');
+});
+
+// Process registration form (POST)
+app.post('/register', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    const passwordHash = password;
+
+    await db.none(
+      `INSERT INTO Users (username, email, password_hash)
+       VALUES ($1, $2, $3)`,
+      [username, email, passwordHash]
+    );
+
+    res.redirect('/login');
+  } catch (err) {
+    console.error('Register error:', err);
+    // You can render the same page with an error message if desired:
+    res.render('pages/register', {
+      error: true,
+      message: err.message,
+    });
+  }
+});
+
+// -------------------------------------  Login Submission -----------------------------------------------
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const query = `SELECT * FROM Users WHERE email = $1 LIMIT 1`;
   const values = [email];
 
   db.one(query, values)
     .then(data => {
-      // Store user info in session
+      // Example password check (plaintext for demonstration only!)
+      if (data.password_hash !== password) {
+        throw new Error('Invalid email/password');
+      }
+
+      // Store user in session
       req.session.user = {
         user_id: data.user_id,
         username: data.username,
         email: data.email,
-        password: data.password_hash,
+        password: data.password_hash, // or omit if you like
+        student_id: data.student_id   // if your table has it
       };
 
       req.session.save(() => {
-        res.redirect('/');
+        // Redirect to home page or wherever you like
+        res.redirect('/home');
       });
     })
     .catch(err => {
       console.error('Login error:', err);
-      res.redirect('/login');
+      res.render('pages/login', {
+        error: true,
+        message: err.message,
+      });
     });
 });
 
+// Middleware to protect certain routes
 const auth = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect('/login');
@@ -110,7 +149,7 @@ const auth = (req, res, next) => {
   next();
 };
 
-
+// -------------------------------------  Protected Routes  ----------------------------------------------
 app.use(auth);
 
 // -------------------------------------  ROUTES for home.hbs   ----------------------------------------------
