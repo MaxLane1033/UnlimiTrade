@@ -88,15 +88,16 @@ app.get('/register', (req, res) => {
 
 // Process registration form (POST)
 app.post('/register', async (req, res) => {
+  console.log("BODY: ",req.body);
   try {
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;    
     // For demonstration purposes; in production hash the password (e.g., using bcrypt)
     const passwordHash = password;
 
-    await db.none(
-      `INSERT INTO Users (username, email, password_hash)
-       VALUES ($1, $2, $3)`,
-      [username, email, passwordHash]
+    await db.any(
+      `INSERT INTO Users (username, password_hash)
+       VALUES ($1, $2)`,
+      [username, passwordHash]
     );
 
     res.redirect('/login');
@@ -111,9 +112,9 @@ app.post('/register', async (req, res) => {
 
 // -------------------------------------  Login Submission -----------------------------------------------
 app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  const query = `SELECT * FROM Users WHERE email = $1 LIMIT 1`;
-  const values = [email];
+  const { username, password } = req.body;
+  const query = `SELECT * FROM Users WHERE username = $1 LIMIT 1`;
+  const values = [username];
 
   db.one(query, values)
     .then(data => {
@@ -126,9 +127,8 @@ app.post('/login', (req, res) => {
       req.session.user = {
         user_id: data.user_id,
         username: data.username,
-        email: data.email,
+        // email: data.email,
         password: data.password_hash,
-        student_id: data.student_id, // if available
       };
 
       req.session.save(() => {

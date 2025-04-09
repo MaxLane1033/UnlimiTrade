@@ -4,26 +4,25 @@ DROP TABLE IF EXISTS TradeBlock;
 DROP TABLE IF EXISTS Items;
 DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Items (
-    item_id INT PRIMARY KEY AUTO_INCREMENT,
+    item_id SERIAL PRIMARY KEY,
     user_id INT,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    status ENUM('available', 'proposed', 'traded') DEFAULT 'available',
+    status VARCHAR(100),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE TradeBlock (
-    trade_id INT PRIMARY KEY AUTO_INCREMENT,
+    trade_id SERIAL PRIMARY KEY,
     proposer_id INT,
     receiver_id INT,
-    status ENUM('proposed', 'confirmed', 'declined') DEFAULT 'proposed',
+status VARCHAR(100),
     FOREIGN KEY (proposer_id) REFERENCES Users(user_id),
     FOREIGN KEY (receiver_id) REFERENCES Users(user_id)
 );
@@ -38,7 +37,7 @@ CREATE TABLE TradeDetails (
 );
 
 CREATE TABLE Reviews (
-    review_id INT PRIMARY KEY AUTO_INCREMENT,
+    review_id SERIAL PRIMARY KEY,
     reviewer_id INT,
     reviewed_id INT,
     rating INT CHECK (rating BETWEEN 1 AND 5),
