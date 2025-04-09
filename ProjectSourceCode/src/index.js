@@ -276,6 +276,16 @@ app.get('/logout', (req, res) => {
   });
 });
 
+
+// -------------------------------------  ROUTES for courses.hbs   ----------------------------------------------
+app.get('/profile', (req, res) => {
+  res.render('pages/profile', {
+    layout: 'main',
+    pageTitle: 'Profile'
+  });
+});
+
+
 // -------------------------------------  START THE SERVER   ----------------------------------------------
 
 app.listen(3000);

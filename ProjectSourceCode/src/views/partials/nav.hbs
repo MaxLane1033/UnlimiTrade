@@ -1,34 +1,14 @@
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-      <a class="navbar-brand" href="/"></a>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <!-- TODO: For 'Home', Add a <a> tag with class="nav-link" and href='/' API that navigates to home page if logged in, or login page if not -->
-          <a class="nav-link" href="{{#if email}}/{{else}}/login{{/if}}">Home</a>
-        </li>
-        <li class="nav-item">
-          <!-- TODO: For 'Courses', Add a <a> tag with class="nav-link" and href='/courses' API that navigates to courses page if logged in, or login page if not -->
-          <a class="nav-link" href="{{#if email}}/courses{{else}}/login{{/if}}">Courses {{user}}</a>
+<header class="bg-white border-bottom py-3">
+  <div class="container d-flex justify-content-between align-items-center flex-wrap">
+    <span class="fw-bold h5 m-0">UnlimiTrade – Marketplace for Item Trading</span>
 
-          <a class="nav-link" href="{{#if email}}/my_courses{{else}}/login{{/if}}">My Courses</a>
-        </li>
-        <li class="nav-item">
-          <!-- TODO: For 'Log out', Add a <a> tag with class="nav-link" and href='/logout' API that navigates to the logout page -->
-          <a class="nav-link" href="/logout">Log out</a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="navbar-collapse collapse order-3 dual-collapse2">
-      <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-              <a class="nav-link" href="#">
-              <!-- TODO: Add the email id which is passed using: {{ variable_name }}. This will display the email id on the top right corner of the page -->
-               {{ email }}
-              </a>
-          </li>
-      </ul>
-    </div>
-  </nav>
+    <nav>
+      <a class="btn btn-outline-dark mx-1" href="/">Home</a>
+      <a class="btn btn-outline-dark mx-1" href="/browse">Browse Items</a>
+      <a class="btn btn-outline-dark mx-1" href="/mytrades">My Trades</a>
+      <a class="btn btn-outline-dark mx-1" href="/post">Post Item</a>
+      <a class="btn btn-outline-dark mx-1" href="/profile">Profile</a>
+      <a class="btn btn-outline-dark mx-1" href="/login">Log In</a>
+    </nav>
+  </div>
 </header>
