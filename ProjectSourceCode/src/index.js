@@ -272,6 +272,19 @@ app.get('/logout', (req, res) => {
   });
 });
 
+
+//--------------------------------------Route for post.hbs
+app.get('/post', (req, res) => {
+  res.render('pages/post');
+});
+app.post('/post', (req, res) => {
+  const { item, description} = req.body;
+  // Normally, you'd save the new item to a database here.
+  console.log('Item Posted:', {item, description });
+
+  // For now, just send a success message back
+  res.send('Item Posted Successfully!');
+});
 // -------------------------------------  ROUTES for profile.hbs   ----------------------------------------------
 app.get('/profile', (req, res) => {
   res.render('pages/profile', {
