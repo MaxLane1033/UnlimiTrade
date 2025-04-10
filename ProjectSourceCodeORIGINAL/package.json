@@ -1,8 +1,6 @@
-
 {
-    "name": "unlimitrade", 
+    "name": "unlimitrade",
     "main": "index.js",
-
     "dependencies": {
         "axios": "^1.1.3",
         "bcryptjs": "^2.4.0",
