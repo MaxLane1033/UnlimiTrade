@@ -158,13 +158,7 @@ app.use(auth);
 // -------------------------------------  ROUTES for home.hbs   ----------------------------------------------
 app.get('/home', (req, res) => {
   res.render('pages/home', {
-    username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    email: req.session.user.email,
-    year: req.session.user.year,
-    major: req.session.user.major,
-    degree: req.session.user.degree,
+    username: req.session.user.username
   });
 });
 
