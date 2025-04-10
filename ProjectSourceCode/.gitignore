@@ -1,4 +1,4 @@
-/ProjectSourceCode/node_modules/
+node_modules/
 package-lock.json
 .env
-/ProjectSourceCode/src/node_modules
+src/node_modules
