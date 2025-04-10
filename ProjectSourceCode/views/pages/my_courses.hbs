@@ -1,0 +1,34 @@
+{{> message}}
+
+<div class="container mt-4">
+    <h2 class="text-center">Courses</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>COURSE ID</th>
+                <th>COURSE NAME</th>
+                <th>CREDIT HOURS</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each courses}}
+            <tr>
+                <td>{{this.course_id}}</td>
+                <td>{{this.course_name}}</td>
+                <td>{{this.credit_hours}}</td>
+                <td>
+                    {{#if this.taken}}
+                        <button class="btn btn-secondary" disabled>Added</button>
+                    {{else}}
+                        <form action="/courses/add" method="POST">
+                            <input type="hidden" name="course_id" value="{{this.course_id}}">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </form>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

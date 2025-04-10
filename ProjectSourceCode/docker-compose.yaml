@@ -1,3 +1,4 @@
+version: '3.9'
 services:
   db:
     image: postgres:14
@@ -5,14 +6,14 @@ services:
     expose:
       - '5432'
     volumes:
-      - lab-07-templating:/var/lib/postgresql/data
+      - group-project:/var/lib/postgresql/data
       - ./src/init_data:/docker-entrypoint-initdb.d
 
   web:
     image: node:lts
     user: 'node'
+    working_dir: /repository
     env_file: .env
-    working_dir: /home/node/app/src
     environment:
       - NODE_ENV=development
     depends_on:
@@ -20,9 +21,10 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./src:/home/node/app/src
-    command: 'npm start'
+      - ./:/repository
+    command: 'npm run testandrun'
 
 volumes:
-  lab-07-templating:
+  group-project:
+
 

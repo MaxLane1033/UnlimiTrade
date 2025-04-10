@@ -1,0 +1,328 @@
+// ----------------------------------   DEPENDENCIES  ----------------------------------------------
+const express = require('express');
+const app = express();
+const handlebars = require('express-handlebars');
+const path = require('path');
+const pgp = require('pg-promise')();
+const bodyParser = require('body-parser');
+const session = require('express-session');
+
+// -------------------------------------  APP CONFIG   ----------------------------------------------
+
+
+// Create an ExpressHandlebars instance with desired settings.
+const hbs = handlebars.create({
+  extname: 'hbs',
+  defaultLayout: 'main',
+  layoutsDir: path.join(__dirname, 'views', 'layouts'),
+  partialsDir: path.join(__dirname, 'views', 'partials'),
+});
+
+// Register 'hbs' as our view engine by simply passing the engine callback.
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+// Set your views directory – adjust if needed.
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+// Set up session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'mysecret', // provide a default for development
+    saveUninitialized: true,
+    resave: true,
+  })
+);
+
+// -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
+const dbConfig = {
+  host: 'db',
+  port: 5432,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+};
+const db = pgp(dbConfig);
+
+// Test DB connection
+db.connect()
+  .then(obj => {
+    console.log('Database connection successful');
+    obj.done();
+  })
+  .catch(error => {
+    console.log('ERROR', error.message || error);
+  });
+
+// -------------------------------------  ROUTES for login.hbs   ----------------------------------------------
+
+// Define Users object with password_hash initialized as undefined.
+const Users = {
+  user_id: undefined,
+  username: undefined,
+  email: undefined,
+  password_hash: undefined,
+};
+
+// -------------------------------------  ROUTES (Public)   ----------------------------------------------
+
+// If someone hits "/", redirect to /register
+app.get('/', (req, res) => {
+  res.redirect('/register');
+});
+
+// Show login form
+app.get('/login', (req, res) => {
+  res.render('pages/login');
+});
+
+// Show register form
+app.get('/register', (req, res) => {
+  res.render('pages/register');
+});
+
+app.post('/register', async (req, res) => {
+  console.log("BODY: ", req.body);
+  const { username, password } = req.body;
+
+  if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+    return res.status(400).json({ message: 'Invalid input!' });
+  }
+
+  try {
+    await db.none(
+      `INSERT INTO users (username, password_hash)
+       VALUES ($1, $2)`,
+      [username, password]
+    );
+
+    res.status(200).json({ message: 'Success, well done.' }); 
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(400).json({ message: 'Invalid input!' }); 
+  }
+});
+
+
+// -------------------------------------  Login Submission -----------------------------------------------
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const query = `SELECT * FROM Users WHERE username = $1 LIMIT 1`;
+  const values = [username];
+
+  db.one(query, values)
+    .then(data => {
+      // Example password check (plaintext; use proper hashing in production!)
+      if (data.password_hash !== password) {
+        throw new Error('Invalid email/password');
+      }
+
+      // Store user info in the session
+      req.session.user = {
+        user_id: data.user_id,
+        username: data.username,
+        // email: data.email,
+        password: data.password_hash,
+      };
+
+      req.session.save(() => {
+        res.redirect('/home');
+      });
+    })
+    .catch(err => {
+      console.error('Login error:', err);
+      res.render('pages/login', {
+        error: true,
+        message: err.message,
+      });
+    });
+});
+
+//??
+//const auth = (req, res, next) => {
+  //if (!req.session.user) {
+    //return res.redirect('/login');
+  //}
+  //next();
+//};
+
+// Middleware to protect certain routes
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // If hitting /profile route, return 401 for API test
+    if (req.path.startsWith('/profile')) {
+      return res.status(401).send('Not authenticated');
+    }
+    return res.redirect('/login');
+  }
+  next();
+};
+
+
+
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
+
+
+// -------------------------------------  Protected Routes  ----------------------------------------------
+app.use(auth);
+
+// -------------------------------------  ROUTES for home.hbs   ----------------------------------------------
+app.get('/home', (req, res) => {
+  res.render('pages/home', {
+    username: req.session.user.username,
+    first_name: req.session.user.first_name,
+    last_name: req.session.user.last_name,
+    email: req.session.user.email,
+    year: req.session.user.year,
+    major: req.session.user.major,
+    degree: req.session.user.degree,
+  });
+});
+
+// -------------------------------------  ROUTES for courses.hbs   ----------------------------------------------
+
+// You must define "all_courses" and "student_courses" queries (adjust as needed)
+const all_courses = `
+  SELECT course_id, course_name FROM courses ORDER BY course_id;
+`;
+const student_courses = `
+  SELECT c.course_id, c.course_name
+    FROM student_courses sc
+    JOIN courses c ON sc.course_id = c.course_id
+   WHERE sc.student_id = $1;
+`;
+
+app.get('/courses', (req, res) => {
+  const taken = req.query.taken;
+  db.any(taken ? student_courses : all_courses, [req.session.user.student_id])
+    .then(courses => {
+      res.render('pages/courses', {
+        email: req.session.user.email,
+        courses,
+        action: req.query.taken ? 'delete' : 'add',
+      });
+    })
+    .catch(err => {
+      res.render('pages/courses', {
+        courses: [],
+        email: req.session.user.email,
+        error: true,
+        message: err.message,
+      });
+    });
+});
+
+app.post('/courses/add', (req, res) => {
+  const course_id = parseInt(req.body.course_id);
+  db.tx(async t => {
+    // Check prerequisites
+    const { num_prerequisites } = await t.one(
+      `SELECT num_prerequisites
+         FROM course_prerequisite_count
+        WHERE course_id = $1`,
+      [course_id]
+    );
+
+    if (num_prerequisites > 0) {
+      const [row] = await t.any(
+        `SELECT num_prerequisites_satisfied
+           FROM student_prerequisite_count
+          WHERE course_id = $1
+            AND student_id = $2`,
+        [course_id, req.session.user.student_id]
+      );
+
+      if (!row || row.num_prerequisites_satisfied < num_prerequisites) {
+        throw new Error(`Prerequisites not satisfied for course ${course_id}`);
+      }
+    }
+
+    // Insert into student_courses
+    await t.none(
+      'INSERT INTO student_courses(course_id, student_id) VALUES ($1, $2);',
+      [course_id, req.session.user.student_id]
+    );
+   
+    return t.any(all_courses, [req.session.user.student_id]);
+  })
+    .then(courses => {
+      res.render('pages/courses', {
+        email: req.session.user.email,
+        courses,
+        message: `Successfully added course ${req.body.course_id}`,
+      });
+    })
+    .catch(err => {
+      res.render('pages/courses', {
+        email: req.session.user.email,
+        courses: [],
+        error: true,
+        message: err.message,
+      });
+    });
+});
+
+app.get('/my_courses', (req, res) => {
+  const taken = req.query.taken;
+  db.any(taken ? student_courses : all_courses, [req.session.user.student_id])
+    .then(courses => {
+      res.render('pages/my_courses', {
+        email: req.session.user.email,
+        courses,
+        action: req.query.taken ? 'delete' : 'add',
+      });
+    })
+    .catch(err => {
+      res.render('pages/my_courses', {
+        courses: [],
+        email: req.session.user.email,
+        error: true,
+        message: err.message,
+      });
+    });
+});
+
+// -------------------------------------  ROUTES for logout.hbs   ----------------------------------------------
+app.get('/logout', (req, res) => {
+  req.session.destroy(function(err) {
+    res.render('pages/logout');
+  });
+});
+
+// -------------------------------------  ROUTES for profile.hbs   ----------------------------------------------
+//app.get('/profile', (req, res) => {
+  //res.render('pages/profile', {
+    //layout: 'main',
+    //pageTitle: 'Profile',
+  //});
+//});
+
+app.get('/profile', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send('Not authenticated');
+  }
+  try {
+    res.status(200).json({
+      username: req.session.user.username,
+    });
+  } catch (err) {
+    console.error('Profile error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
+// -------------------------------------  START THE SERVER   ----------------------------------------------
+module.exports = app.listen(3000, () => {
+  console.log('Server is listening on port 3000');
+});
