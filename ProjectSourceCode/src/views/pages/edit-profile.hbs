@@ -1,0 +1,11 @@
+<form action="/edit-profile" method="POST" enctype="multipart/form-data">
+  <!-- Username update field -->
+  <label for="username">Update Username:</label>
+  <input type="text" name="username" id="username" value="{{username}}" required />
+
+  <!-- Profile picture upload field -->
+  <label for="profile_picture">Upload Profile Picture:</label>
+  <input type="file" name="profile_picture" id="profile_picture" accept="image/*" />
+
+  <button type="submit">Save Changes</button>
+</form>
