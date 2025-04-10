@@ -1,0 +1,41 @@
+{{> message}}
+
+<body>
+  <main class="container">
+    <h2>Post an Item for Trade</h2>
+
+    <form action="/post" method="POST" enctype="multipart/form-data" class="post-form">
+
+      <label for="itemName">Item Name</label>
+      <input type="text" id="itemName" name="itemName" required>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" required></textarea>
+
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="">Select a category</option>
+        <option value="electronics">Electronics</option>
+        <option value="books">Books</option>
+        <option value="collectibles">Collectibles</option>
+        <option value="clothing">Clothing</option>
+        <option value="tools">Tools</option>
+      </select>
+
+      <label for="imageUpload">Upload Images</label>
+      <input type="file" id="imageUpload" name="images" accept="image/*" multiple>
+
+      <label for="condition">Condition</label>
+      <select id="condition" name="condition" required>
+        <option value="">Select condition</option>
+        <option value="new">New</option>
+        <option value="used">Used</option>
+      </select>
+
+      <label for="preferences">Trade Preferences</label>
+      <textarea id="preferences" name="preferences"></textarea>
+
+      <button type="submit" class="btn submit-btn">Submit</button>
+    </form>
+  </main>
+</body>
