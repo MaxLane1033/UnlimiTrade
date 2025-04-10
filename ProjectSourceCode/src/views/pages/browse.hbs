@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Browse Items - UnlimiTrade</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      font-family: Arial, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    nav button {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      margin: 0 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    nav button:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .search-bar {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .search-bar input {
+      padding: 10px;
+      width: 60%;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .content {
+      display: flex;
+      padding: 20px;
+      gap: 30px;
+    }
+
+    .filters {
+      width: 200px;
+      background-color: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .filters h3 {
+      margin-top: 0;
+    }
+
+    .filters input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .items-section {
+      flex-grow: 1;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .item-card {
+      background-color: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .item-card img {
+      width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .item-card button {
+      background-color: #00bfff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .pagination {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .pagination span {
+      margin: 0 5px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9rem;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #dddddd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>UnlimiTrade - Marketplace for Item Trading</h1>
+    <nav>
+      <button onclick="location.href='index.html'">Home</button>
+      <button>Browse Items</button>
+      <button>My Trades</button>
+      <button>Post Item</button>
+      <button>Profile</button>
+      <button>Log In</button>
+    </nav>
+  </header>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search for items...">
+  </div>
+
+  <div class="content">
+    <div class="filters">
+      <h3>Filters</h3>
+      <label>Categories</label>
+      <input type="text" placeholder="e.g. Electronics">
+      <label>Condition</label>
+      <input type="text" placeholder="e.g. New, Used">
+    </div>
+
+    <div class="items-section">
+      <h2>Items Available for Trade</h2>
+      <div class="items-grid">
+        <div class="item-card">
+          <img src="https://via.placeholder.com/100" alt="Item">
+          <strong>Item Name</strong>
+          <p>Description</p>
+          <button>Trade Now</button>
+        </div>
+        <div class="item-card">
+          <img src="https://via.placeholder.com/100" alt="Item">
+          <strong>Item Name</strong>
+          <p>Description</p>
+          <button>Trade Now</button>
+        </div>
+        <div class="item-card">
+          <img src="https://via.placeholder.com/100" alt="Item">
+          <strong>Item Name</strong>
+          <p>Description</p>
+          <button>Trade Now</button>
+        </div>
+        <div class="item-card">
+          <img src="https://via.placeholder.com/100" alt="Item">
+          <strong>Item Name</strong>
+          <p>Description</p>
+          <button>Trade Now</button>
+        </div>
+        <div class="item-card">
+          <img src="https://via.placeholder.com/100" alt="Item">
+          <strong>Item Name</strong>
+          <p>Description</p>
+          <button>Trade Now</button>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+        <span>5</span>
+        <span>&gt;&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 UnlimiTrade | <a href="#">About</a> | <a href="#">Terms</a> | <a href="#">Privacy</a>
+  </footer>
+</body>
+</html>

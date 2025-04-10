@@ -322,6 +322,14 @@ app.get('/edit-profile', (req, res) => {
   });
 });
 
+// -------------------------------------  ROUTES for browse.hbs   ----------------------------------------------
+app.get('/browse', (req, res) => {
+  res.render('pages/browse', {
+    layout: 'main',
+    pageTitle: 'Browse',
+  });
+});
+
 
 // -------------------------------------  ROUTES for editing profile info ----------------------------------------------
 app.post('/edit-profile', upload.single('profile_picture'), async (req, res) => {
