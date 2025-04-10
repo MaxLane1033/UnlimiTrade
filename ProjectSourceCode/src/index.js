@@ -293,6 +293,13 @@ app.get('/profile', (req, res) => {
   });
 });
 
+// -------------------------------------  ROUTES for browse.hbs   ----------------------------------------------
+app.get('/browse', (req, res) => {
+  res.render('pages/browse', {
+    layout: 'main',
+    pageTitle: 'Browse',
+  });
+});
 // -------------------------------------  START THE SERVER   ----------------------------------------------
 app.listen(3000, () => {
   console.log('Server is listening on port 3000');
