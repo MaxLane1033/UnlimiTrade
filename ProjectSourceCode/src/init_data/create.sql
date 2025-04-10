@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+    username VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(60) NOT NULL
+);
+
+
+
+
+
 DROP TABLE IF EXISTS Reviews;
 DROP TABLE IF EXISTS TradeDetails;
 DROP TABLE IF EXISTS TradeBlock;
@@ -6,7 +16,7 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL
+    password_hash VARCHAR(225) NOT NULL
 );
 
 CREATE TABLE Items (
