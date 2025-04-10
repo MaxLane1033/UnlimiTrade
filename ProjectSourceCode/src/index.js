@@ -300,6 +300,7 @@ app.get('/browse', (req, res) => {
     pageTitle: 'Browse',
   });
 });
+
 // -------------------------------------  START THE SERVER   ----------------------------------------------
 app.listen(3000, () => {
   console.log('Server is listening on port 3000');
