@@ -6,8 +6,7 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    profile_picture TEXT /*testing this for editing a profile picture*/
+    password_hash VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Items (

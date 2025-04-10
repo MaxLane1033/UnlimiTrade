@@ -1,21 +1,11 @@
 // ----------------------------------   DEPENDENCIES  ----------------------------------------------
 const express = require('express');
 const app = express();
-
 const handlebars = require('express-handlebars');
 const path = require('path');
 const pgp = require('pg-promise')();
 const bodyParser = require('body-parser');
 const session = require('express-session');
-
-// this is for the profile.hbs to allow a picture to be uploaded
-const multer = require('multer');
-const upload = multer({ dest: 'public/uploads/' }); // You can customize this folder
-
-
-app.use(express.static(path.join(__dirname, 'public'))); //for profile picture 
-
-
 
 // -------------------------------------  APP CONFIG   ----------------------------------------------
 
@@ -26,12 +16,6 @@ const hbs = handlebars.create({
   layoutsDir: path.join(__dirname, 'views', 'layouts'),
   partialsDir: path.join(__dirname, 'views', 'partials'),
 });
-
-// Register custom Handlebars helper
-hbs.handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
-  return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-});
-
 
 // Register 'hbs' as our view engine by simply passing the engine callback.
 app.engine('hbs', hbs.engine);
@@ -134,16 +118,17 @@ app.post('/login', (req, res) => {
 
   db.one(query, values)
     .then(data => {
+      // Example password check (plaintext; use proper hashing in production!)
       if (data.password_hash !== password) {
-        throw new Error('Invalid username/password');
+        throw new Error('Invalid email/password');
       }
 
-      // ✅ Store full user info, including profile picture
+      // Store user info in the session
       req.session.user = {
         user_id: data.user_id,
         username: data.username,
+        // email: data.email,
         password: data.password_hash,
-        profile_picture: data.profile_picture || null
       };
 
       req.session.save(() => {
@@ -158,7 +143,6 @@ app.post('/login', (req, res) => {
       });
     });
 });
-
 
 // Middleware to protect certain routes
 const auth = (req, res, next) => {
@@ -299,46 +283,8 @@ app.get('/profile', (req, res) => {
   res.render('pages/profile', {
     layout: 'main',
     pageTitle: 'Profile',
-    username: req.session.user.username,
-    profile_picture: req.session.user.profile_picture || null
   });
 });
-
-
-
-// -------------------------------------  Route to render edit-profile page  ----------------------------------------------
-app.get('/edit-profile', (req, res) => {
-  res.render('pages/edit-profile', {
-    layout: 'main',
-    username: req.session.user.username,
-    profile_picture: req.session.user.profile_picture || null
-  });
-});
-
-
-// -------------------------------------  ROUTES for editing profile info ----------------------------------------------
-app.post('/edit-profile', upload.single('profile_picture'), async (req, res) => {
-  const username = req.body.username;
-  const profilePic = req.file ? `/uploads/${req.file.filename}` : null;
-
-  try {
-    await db.none(
-      `UPDATE Users SET username = $1, profile_picture = COALESCE($2, profile_picture) WHERE user_id = $3`,
-      [username, profilePic, req.session.user.user_id]
-    );
-
-    // Update session info
-    req.session.user.username = username;
-    if (profilePic) req.session.user.profile_picture = profilePic;
-
-    res.redirect('/profile');
-  } catch (err) {
-    console.error(err);
-    res.render('pages/edit-profile', { error: true, message: err.message });
-  }
-});
-
-
 
 // -------------------------------------  START THE SERVER   ----------------------------------------------
 app.listen(3000, () => {
