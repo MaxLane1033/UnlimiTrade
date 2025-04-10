@@ -138,6 +138,8 @@ app.post('/register', async (req, res) => {
   }
 });
 
+
+
 app.get('/logout', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); 
