@@ -38,3 +38,4 @@ function addTradeToUI(trade) {
 
   feed.prepend(card); // newest trade on top
 }
+ 

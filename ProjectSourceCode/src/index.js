@@ -174,13 +174,7 @@ app.use(auth);
 // -------------------------------------  ROUTES for home.hbs   ----------------------------------------------
 app.get('/home', (req, res) => {
   res.render('pages/home', {
-    username: req.session.user.username,
-    first_name: req.session.user.first_name,
-    last_name: req.session.user.last_name,
-    email: req.session.user.email,
-    year: req.session.user.year,
-    major: req.session.user.major,
-    degree: req.session.user.degree,
+    username: req.session.user.username
   });
 });
 
@@ -294,6 +288,19 @@ app.get('/logout', (req, res) => {
   });
 });
 
+
+//--------------------------------------Route for post.hbs
+app.get('/post', (req, res) => {
+  res.render('pages/post');
+});
+app.post('/post', (req, res) => {
+  const { item, description} = req.body;
+  // Normally, you'd save the new item to a database here.
+  console.log('Item Posted:', {item, description });
+
+  // For now, just send a success message back
+  res.send('Item Posted Successfully!');
+});
 // -------------------------------------  ROUTES for profile.hbs   ----------------------------------------------
 app.get('/profile', (req, res) => {
   res.render('pages/profile', {

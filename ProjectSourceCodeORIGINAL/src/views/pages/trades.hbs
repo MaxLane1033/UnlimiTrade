@@ -1,0 +1,39 @@
+{{> message}}
+
+<body>
+  <main class="container">
+    <h2>My Trades</h2>
+
+    <div class="tabs">
+      <button class="tab active">Active Trades</button>
+      <button class="tab">Completed Trades</button>
+      <button class="tab">Pending Trades</button>
+    </div>
+
+    <section class="trade-listings">
+      <h3>Trade Listings</h3>
+
+      {{#each trades}}
+        <div class="trade-card">
+          <div class="item-image">
+            <img src="{{this.imageUrl}}" alt="Item Image">
+          </div>
+          <div class="item-info">
+            <strong>{{this.name}}</strong>
+            <p>Trade Status: {{this.status}}</p>
+          </div>
+          <div class="trade-actions">
+            <a href="/trade/{{this.id}}" class="btn">View Details</a>
+            <form method="POST" action="/trade/{{this.id}}/cancel" style="display:inline;">
+              <button type="submit" class="btn cancel">Cancel</button>
+            </form>
+            <form method="POST" action="/trade/{{this.id}}/confirm" style="display:inline;">
+              <button type="submit" class="btn confirm">Confirm</button>
+            </form>
+          </div>
+        </div>
+      {{/each}}
+
+    </section>
+  </main>
+</body>
