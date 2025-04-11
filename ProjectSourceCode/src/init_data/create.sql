@@ -16,6 +16,7 @@ CREATE TABLE Items (
     name VARCHAR(100) NOT NULL,
     description TEXT,
     status VARCHAR(100),
+    image_path TEXT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
