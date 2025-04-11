@@ -144,20 +144,21 @@
   </div>
 
   <div class="post-form">
-    <form action="/post" method="POST">
-      <label for="itemName">Item Name</label>
-      <input type="text" id="itemName" name="itemName" placeholder="Enter item name" required>
+  <form action="/post" method="POST" enctype="multipart/form-data">
+    <label for="itemName">Item Name</label>
+    <input type="text" id="itemName" name="itemName" placeholder="Enter item name" required>
 
-      <label for="tradeDetails">Trade Details</label>
-      <textarea id="tradeDetails" name="tradeDetails" placeholder="Enter trade details" required></textarea>
-      
-      <button type="submit">Post Item</button>
-    </form>
-  </div>
+    <label for="tradeDetails">Trade Details</label>
+    <textarea id="tradeDetails" name="tradeDetails" placeholder="Enter trade details" required></textarea>
 
-  <footer>
-    © 2025 UnlimiTrade | <a href="#">About</a> | <a href="#">Terms</a> | <a href="#">Privacy</a>
-  </footer>
+    <!-- Image Upload Field -->
+    <label for="itemImage">Upload Item Photo</label>
+    <input type="file" id="itemImage" name="itemImage" accept="image/*" />
+
+    <button type="submit">Post Item</button>
+  </form>
+</div>
+
 </body>
 
 </html>

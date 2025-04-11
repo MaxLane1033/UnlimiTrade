@@ -293,22 +293,86 @@ app.get('/logout', (req, res) => {
 app.get('/post', (req, res) => {
   res.render('pages/post');
 });
-app.post('/post', (req, res) => {
-  const { item, description} = req.body;
-  // Normally, you'd save the new item to a database here.
-  console.log('Item Posted:', {item, description });
 
-  // For now, just send a success message back
-  res.send('Item Posted Successfully!');
+
+app.post('/post', upload.single('itemImage'), async (req, res) => {
+  const { itemName, tradeDetails } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+  // Validate required fields 
+  // NEED TO FIND OUT WHY WHEN THERE IS NO IMAGE, IT JUST RELOADS THE PAGE WITH NO MESSAGE
+  if (!itemName || !tradeDetails || !imagePath) {
+    return res.render('pages/post', {
+      error: true,
+      message: 'All fields are required: item name, description, and image.'
+    });
+  }
+
+  try {
+    await db.none(
+      `INSERT INTO Items (user_id, name, description, status, image_path)
+       VALUES ($1, $2, $3, 'available', $4)`,
+      [req.session.user.user_id, itemName, tradeDetails, imagePath]
+    );
+
+    res.redirect('/browse');
+  } catch (err) {
+    console.error(err);
+    res.render('pages/post', { error: true, message: err.message });
+  }
 });
+
 // -------------------------------------  ROUTES for profile.hbs   ----------------------------------------------
-app.get('/profile', (req, res) => {
-  res.render('pages/profile', {
-    layout: 'main',
-    pageTitle: 'Profile',
-    username: req.session.user.username,
-    profile_picture: req.session.user.profile_picture || null
-  });
+app.get('/profile', async (req, res) => {
+  try {
+    const userId = req.session.user.user_id;
+
+    const tradeHistory = await db.any(
+      `SELECT name AS itemName, status, '' AS otherUser
+       FROM Items
+       WHERE user_id = $1`,
+      [userId]
+    );
+
+    const postedItems = await db.any(
+      `SELECT item_id, name, description, image_path
+       FROM Items
+       WHERE user_id = $1 AND image_path IS NOT NULL`,
+      [req.session.user.user_id]
+    );
+    
+
+    res.render('pages/profile', {
+      layout: 'main',
+      pageTitle: 'Profile',
+      username: req.session.user.username,
+      profile_picture: req.session.user.profile_picture || null,
+      tradeHistory,
+      postedItems
+    });
+  } catch (err) {
+    console.error('Profile fetch error:', err);
+    res.render('pages/profile', {
+      error: true,
+      message: 'Could not load profile',
+    });
+  }
+});
+
+// -------------------------------------  Deleting post on profile pic   ----------------------------------------------
+
+app.post('/delete-item/:itemId', async (req, res) => {
+  const itemId = req.params.itemId;
+  const userId = req.session.user.user_id;
+
+  try {
+    // Ensure the item belongs to the logged-in user
+    await db.none(`DELETE FROM Items WHERE item_id = $1 AND user_id = $2`, [itemId, userId]);
+    res.redirect('/profile');
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).send('Error deleting item');
+  }
 });
 
 
