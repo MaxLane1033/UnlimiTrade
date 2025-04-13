@@ -94,6 +94,7 @@ app.get('/', (req, res) => {
 
 // Show login form
 app.get('/login', (req, res) => {
+  console.log("hello test");
   res.render('pages/login');
 });
 
@@ -203,7 +204,7 @@ app.get('/courses', (req, res) => {
     })
     .catch(err => {
       res.render('pages/courses', {
-        courses: [],
+        courses: [], 
         email: req.session.user.email,
         error: true,
         message: err.message,
@@ -415,6 +416,11 @@ app.post('/edit-profile', upload.single('profile_picture'), async (req, res) => 
     console.error(err);
     res.render('pages/edit-profile', { error: true, message: err.message });
   }
+});
+
+app.get('/myTrades', async (req, res) => {
+  console.log("Rendering myTrades page");
+  res.render('pages/myTrades');
 });
 
 
