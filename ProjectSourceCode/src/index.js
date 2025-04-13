@@ -139,7 +139,7 @@ app.post('/login', (req, res) => {
         throw new Error('Invalid username/password');
       }
 
-      // ✅ Store full user info, including profile picture
+      // Store full user info, including profile picture
       req.session.user = {
         user_id: data.user_id,
         username: data.username,
@@ -417,10 +417,39 @@ app.post('/edit-profile', upload.single('profile_picture'), async (req, res) => 
     res.render('pages/edit-profile', { error: true, message: err.message });
   }
 });
+app.get('/about', async (req, res) => {
+  res.render('pages/about');
+})
 
 app.get('/myTrades', async (req, res) => {
-  console.log("Rendering myTrades page");
-  res.render('pages/myTrades');
+  const userId = req.session.user.user_id;
+
+  try {
+    const trades = await db.any(`
+      SELECT 
+        trades.id,
+        trades.message,
+        trades.status,
+        sender.username AS sender_username,
+        receiver.username AS receiver_username,
+        offered_item.name AS offered_item_name,
+        offered_item.image_url AS offered_item_image,
+        requested_item.name AS requested_item_name,
+        requested_item.image_url AS requested_item_image
+      FROM trades
+      JOIN users AS sender ON trades.sender_id = sender.user_id
+      JOIN users AS receiver ON trades.receiver_id = receiver.user_id
+      JOIN items AS offered_item ON trades.offered_item_id = offered_item.item_id
+      JOIN items AS requested_item ON trades.requested_item_id = requested_item.item_id
+      WHERE trades.sender_id = $1 OR trades.receiver_id = $1
+      ORDER BY trades.created_at DESC;
+    `, [userId]);
+
+    res.render('pages/myTrades', { trades });
+  } catch (err) {
+    console.error('Error fetching trades:', err);
+    res.render('pages/mytrades', { trades: [], error: 'Failed to load trades.' });
+  }
 });
 
 
