@@ -470,7 +470,7 @@ app.get('/myTrades', async (req, res) => {
     res.render('pages/myTrades', { trades });
   } catch (err) {
     console.error('Error fetching trades:', err);
-    res.render('pages/mytrades', { trades: [], error: 'Failed to load trades.' });
+    res.render('pages/myTrades', { trades: [], error: 'Failed to load trades.' });
   }
 });
 
