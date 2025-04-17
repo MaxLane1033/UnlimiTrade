@@ -300,8 +300,7 @@ app.post('/post', upload.single('itemImage'), async (req, res) => {
   const { itemName, tradeDetails } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-  // Validate required fields 
-  // NEED TO FIND OUT WHY WHEN THERE IS NO IMAGE, IT JUST RELOADS THE PAGE WITH NO MESSAGE
+  
   if (!itemName || !tradeDetails || !imagePath) {
     return res.render('pages/post', {
       error: true,
@@ -388,11 +387,34 @@ app.get('/edit-profile', (req, res) => {
 });
 
 // -------------------------------------  ROUTES for browse.hbs   ----------------------------------------------
-app.get('/browse', (req, res) => {
-  res.render('pages/browse', {
-    layout: 'main',
-    pageTitle: 'Browse',
-  });
+app.get('/browse', async (req, res) => {
+  try {
+   
+    const items = await db.any(`
+        SELECT item_id, name, description, image_path
+          FROM Items
+         WHERE status = 'available'
+           AND image_path IS NOT NULL
+      ORDER BY item_id DESC
+    `);
+
+    console.log('[Browse] fetched rows:', items.length);   // quick sanity check
+
+    res.render('pages/browse', {
+      layout   : 'main',     // keep your main layout
+      pageTitle: 'Browse',
+      items                      // <-- what the template loops over
+    });
+  } catch (err) {
+    console.error('[Browse] DB error:', err);
+    res.status(500).render('pages/browse', {
+      layout   : 'main',
+      pageTitle: 'Browse',
+      items    : [],
+      hasError : true,
+      errMsg   : 'Server error: ' + err.message
+    });
+  }
 });
 
 
