@@ -442,6 +442,12 @@ app.post('/edit-profile', upload.single('profile_picture'), async (req, res) => 
 app.get('/about', async (req, res) => {
   res.render('pages/about');
 })
+app.get('/terms', async (req, res) => {
+  res.render('pages/terms');
+})
+app.get('/privacy', async (req, res) => {
+  res.render('pages/privacy');
+})
 
 app.get('/myTrades', async (req, res) => {
   const userId = req.session.user.user_id;
