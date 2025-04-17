@@ -1,0 +1,15 @@
+<div class="item-card">
+  <img src="{{#if image_path}}{{image_path}}{{else}}https://via.placeholder.com/100{{/if}}"
+       alt="{{name}}" />
+  <strong>{{name}}</strong>
+  <p>{{description}}</p>
+<p style="font-size:.8rem;text-align:center;">
+  DEBUG: {{items.length}} item(s) coming from server
+</p>
+
+  {{!-- button or link can vary; keep generic here --}}
+  <form action="/trade/{{item_id}}" method="GET">
+  
+    <button type="submit">Trade Now</button>
+  </form>
+</div>
