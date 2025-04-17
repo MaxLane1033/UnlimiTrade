@@ -1,164 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Post a New Item</title>
- 
+  
   <style>
-    body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      font-family: Arial, sans-serif;
-      color: white;
-      margin: 0;
-      padding: 0;
-    }
+/* ---- Global reset & helpers ---- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    header {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;          /* header on top, main content below */
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
 
-    nav button {
-      background-color: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      margin: 0 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
+/* ---- Header ---- */
+header {
+  width: 100%;
+  text-align: center;
+  padding: 18px 0;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 40px;
+}
 
-    nav button:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-    }
 
-    .search-bar {
-      margin: 20px auto;
-      text-align: center;
-    }
 
-    .search-bar input {
-      padding: 10px;
-      width: 50%;
-      border-radius: 5px;
-      border: none;
-    }
+.post-form {
+  max-width: 500px;
+  width: 90%;
+  margin: 0 auto 40px;            
+  padding: 28px 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-    .section-title {
-      margin: 20px 40px;
-      font-weight: bold;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
 
-    .section-title button {
-      background-color: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+.post-form label {
+  font-weight: bold;
+  text-align: center;
+}
 
-    .section-title button:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-    }
+.post-form input[type="text"],
+.post-form textarea,
+.post-form input[type="file"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #000;
+}
 
-    .featured, .categories, .active-trades {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
+.post-form textarea { resize: vertical; }
 
-    .item-box, .category-box, .trade-box {
-      background-color: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      width: 150px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
+.post-form button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
 
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      background-color: rgba(0, 0, 0, 0.3);
-    }
+.post-form button:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+</style>
 
-    /* Additional styling for the post form */
-    .post-form {
-      max-width: 500px;
-      margin: 20px auto;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-    .post-form label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    .post-form input, 
-    .post-form textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 5px;
-    }
-    .post-form button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      border: none;
-      background-color: rgba(255, 255, 255, 0.2);
-      color: white;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .post-form button:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-    }
-  </style>
-  <script src="/script.js" defer></script>
 </head>
-
 <body>
-
-  <header>
-    <!-- This h1 element is visible and centered -->
-    <h1>Post a New Item</h1>
-  </header>
-
-  <div class="section-title">
-   
-  </div>
-
-  <div class="post-form">
-  <form action="/post" method="POST" enctype="multipart/form-data">
+  <header><h1>Post a New Item</h1></header>
+{{> message}}
+  <form class="post-form" action="/post" method="POST" enctype="multipart/form-data">
     <label for="itemName">Item Name</label>
-    <input type="text" id="itemName" name="itemName" placeholder="Enter item name" required>
+    <input id="itemName" name="itemName" type="text" placeholder="Enter item name" required />
 
     <label for="tradeDetails">Trade Details</label>
-    <textarea id="tradeDetails" name="tradeDetails" placeholder="Enter trade details" required></textarea>
+    <textarea id="tradeDetails" name="tradeDetails" rows="4" placeholder="Enter trade details" required></textarea>
 
-    <!-- Image Upload Field -->
     <label for="itemImage">Upload Item Photo</label>
-    <input type="file" id="itemImage" name="itemImage" accept="image/*" />
+    <input id="itemImage" name="itemImage" type="file" accept="image/*" />
 
     <button type="submit">Post Item</button>
   </form>
-</div>
-
 </body>
-
 </html>
