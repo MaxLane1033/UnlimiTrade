@@ -57,8 +57,8 @@ app.use(
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
-  host: 'db',
-  port: 5432,
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
@@ -300,7 +300,8 @@ app.post('/post', upload.single('itemImage'), async (req, res) => {
   const { itemName, tradeDetails } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-  
+  // Validate required fields 
+  // NEED TO FIND OUT WHY WHEN THERE IS NO IMAGE, IT JUST RELOADS THE PAGE WITH NO MESSAGE
   if (!itemName || !tradeDetails || !imagePath) {
     return res.render('pages/post', {
       error: true,
@@ -387,34 +388,11 @@ app.get('/edit-profile', (req, res) => {
 });
 
 // -------------------------------------  ROUTES for browse.hbs   ----------------------------------------------
-app.get('/browse', async (req, res) => {
-  try {
-   
-    const items = await db.any(`
-        SELECT item_id, name, description, image_path
-          FROM Items
-         WHERE status = 'available'
-           AND image_path IS NOT NULL
-      ORDER BY item_id DESC
-    `);
-
-    console.log('[Browse] fetched rows:', items.length);   // quick sanity check
-
-    res.render('pages/browse', {
-      layout   : 'main',     // keep your main layout
-      pageTitle: 'Browse',
-      items                      // <-- what the template loops over
-    });
-  } catch (err) {
-    console.error('[Browse] DB error:', err);
-    res.status(500).render('pages/browse', {
-      layout   : 'main',
-      pageTitle: 'Browse',
-      items    : [],
-      hasError : true,
-      errMsg   : 'Server error: ' + err.message
-    });
-  }
+app.get('/browse', (req, res) => {
+  res.render('pages/browse', {
+    layout: 'main',
+    pageTitle: 'Browse',
+  });
 });
 
 
@@ -441,6 +419,12 @@ app.post('/edit-profile', upload.single('profile_picture'), async (req, res) => 
 });
 app.get('/about', async (req, res) => {
   res.render('pages/about');
+})
+app.get('/terms', async (req, res) => {
+  res.render('pages/terms');
+})
+app.get('/privacy', async (req, res) => {
+  res.render('pages/privacy');
 })
 
 app.get('/myTrades', async (req, res) => {
