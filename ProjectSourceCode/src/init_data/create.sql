@@ -1,16 +1,12 @@
-DROP TABLE IF EXISTS Reviews;
-DROP TABLE IF EXISTS TradeDetails;
-DROP TABLE IF EXISTS TradeBlock;
-DROP TABLE IF EXISTS Items;
-DROP TABLE IF EXISTS Users;
-CREATE TABLE Users (
+
+CREATE TABLE IF NOT EXISTS Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     profile_picture TEXT /*testing this for editing a profile picture*/
 );
 
-CREATE TABLE Items (
+CREATE TABLE IF NOT EXISTS Items (
     item_id SERIAL PRIMARY KEY,
     user_id INT,
     name VARCHAR(100) NOT NULL,
@@ -20,7 +16,7 @@ CREATE TABLE Items (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE TradeBlock (
+CREATE TABLE IF NOT EXISTS TradeBlock (
     trade_id SERIAL PRIMARY KEY,
     proposer_id INT,
     receiver_id INT,
@@ -29,7 +25,7 @@ status VARCHAR(100),
     FOREIGN KEY (receiver_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE TradeDetails (
+CREATE TABLE IF NOT EXISTS TradeDetails (
     trade_id INT,
     item_id INT,
     shipping_address VARCHAR(100),
@@ -38,7 +34,7 @@ CREATE TABLE TradeDetails (
     FOREIGN KEY (item_id) REFERENCES Items(item_id)
 );
 
-CREATE TABLE Reviews (
+CREATE TABLE IF NOT EXISTS Reviews (
     review_id SERIAL PRIMARY KEY,
     reviewer_id INT,
     reviewed_id INT,
