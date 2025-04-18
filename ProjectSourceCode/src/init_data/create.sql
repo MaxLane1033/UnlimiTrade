@@ -43,3 +43,15 @@ CREATE TABLE IF NOT EXISTS Reviews (
     FOREIGN KEY (reviewer_id) REFERENCES Users(user_id),
     FOREIGN KEY (reviewed_id) REFERENCES Users(user_id)
 );
+
+--This is for the trading between users
+CREATE TABLE IF NOT EXISTS trades (
+    id SERIAL PRIMARY KEY,
+    sender_id INT REFERENCES Users(user_id),
+    receiver_id INT REFERENCES Users(user_id),
+    offered_item_id INT REFERENCES Items(item_id),
+    requested_item_id INT REFERENCES Items(item_id),
+    message TEXT,
+    status VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
