@@ -63,6 +63,18 @@ const dbConfig = {
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
 };
+
+
+// comment out the above and uncomment this to test it locally 
+// const dbConfig = {
+//   host: process.env.POSTGRES_HOST || 'db',   
+//   port: process.env.POSTGRES_PORT || 5432,
+//   database: process.env.POSTGRES_DB || 'your_db_name',
+//   user: process.env.POSTGRES_USER || 'your_db_user',
+//   password: process.env.POSTGRES_PASSWORD || 'your_db_password',
+// };
+
+
 const db = pgp(dbConfig);
 
 // Test DB connection
@@ -389,33 +401,102 @@ app.get('/edit-profile', (req, res) => {
 // -------------------------------------  ROUTES for browse.hbs   ----------------------------------------------
 app.get('/browse', async (req, res) => {
   try {
-   
+    // Exclude the logged-in user's own items
     const items = await db.any(`
-        SELECT item_id, name, description, image_path
-          FROM Items
-         WHERE status = 'available'
-           AND image_path IS NOT NULL
+      SELECT item_id, name, description, image_path, user_id
+      FROM Items
+      WHERE status = 'available'
+        AND image_path IS NOT NULL
+        AND user_id != $1
       ORDER BY item_id DESC
-    `);
+    `, [req.session.user.user_id]);
 
-    console.log('[Browse] fetched rows:', items.length);   // quick sanity check
+    console.log('[Browse] fetched rows:', items.length); // quick sanity check
 
     res.render('pages/browse', {
-      layout   : 'main',     // keep your main layout
+      layout: 'main',
       pageTitle: 'Browse',
-      items                      // <-- what the template loops over
+      items,
+      currentUserId: req.session.user.user_id // Optional: useful for frontend conditionals
     });
   } catch (err) {
     console.error('[Browse] DB error:', err);
     res.status(500).render('pages/browse', {
-      layout   : 'main',
+      layout: 'main',
       pageTitle: 'Browse',
-      items    : [],
-      hasError : true,
-      errMsg   : 'Server error: ' + err.message
+      items: [],
+      hasError: true,
+      errMsg: 'Server error: ' + err.message
     });
   }
 });
+
+
+
+
+// -------------------------------------  ROUTE to propose a trade (GET) ----------------------------------------------
+app.get('/trade/:itemId', async (req, res) => {
+  const userId = req.session.user.user_id;
+  const requestedItemId = req.params.itemId;
+
+  try {
+    const requestedItem = await db.one(
+      `SELECT item_id, name, description, image_path, user_id
+       FROM Items
+       WHERE item_id = $1`,
+      [requestedItemId]
+    );
+
+    // Prevent user from trading on their own item
+    if (requestedItem.user_id === userId) {
+      return res.redirect('/browse');
+    }
+
+    const userItems = await db.any(
+      `SELECT item_id, name, image_path
+       FROM Items
+       WHERE user_id = $1 AND status = 'available'`,
+      [userId]
+    );
+
+    res.render('pages/initiateTrade', {
+      requestedItem,
+      userItems
+    });
+  } catch (err) {
+    console.error('Trade page error:', err);
+    res.redirect('/browse');
+  }
+});
+
+
+// -------------------------------------  ROUTE to submit a trade request (POST) ----------------------------------------------
+app.post('/trade', async (req, res) => {
+  const senderId = req.session.user.user_id;
+  const { offeredItemId, requestedItemId, message } = req.body;
+
+  try {
+    await db.none(
+      `INSERT INTO trades (sender_id, receiver_id, offered_item_id, requested_item_id, message, status, created_at)
+       VALUES (
+         $1,
+         (SELECT user_id FROM Items WHERE item_id = $2),
+         $3,
+         $2,
+         $4,
+         'pending',
+         NOW()
+       )`,
+      [senderId, requestedItemId, offeredItemId, message]
+    );
+
+    res.redirect('/myTrades');
+  } catch (err) {
+    console.error('Trade submission error:', err);
+    res.redirect('/browse');
+  }
+});
+
 
 
 // -------------------------------------  ROUTES for editing profile info ----------------------------------------------
