@@ -1,0 +1,28 @@
+<h2 class="text-center text-white">Propose a Trade</h2>
+<div class="container mt-4 text-white">
+  <div class="mb-3">
+    <strong>You are requesting:</strong>
+    <p>{{requestedItem.name}}</p>
+    <img src="{{requestedItem.image_path}}" alt="Requested Item" style="max-width: 200px;">
+  </div>
+
+  <form action="/trade" method="POST">
+    <input type="hidden" name="requestedItemId" value="{{requestedItem.item_id}}">
+
+    <div class="mb-3">
+      <label for="offeredItemId" class="form-label">Select your item to offer:</label>
+      <select name="offeredItemId" id="offeredItemId" class="form-control" required>
+        {{#each userItems}}
+          <option value="{{this.item_id}}">{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="message" class="form-label">Message (optional):</label>
+      <textarea name="message" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Trade Request</button>
+  </form>
+</div>
