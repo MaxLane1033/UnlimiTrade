@@ -56,23 +56,23 @@ app.use(
 );
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
-const dbConfig = {
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  database: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-};
+// const dbConfig = {
+//   host: process.env.POSTGRES_HOST,
+//   port: process.env.POSTGRES_PORT,
+//   database: process.env.POSTGRES_DB,
+//   user: process.env.POSTGRES_USER,
+//   password: process.env.POSTGRES_PASSWORD,
+// };
 
 
 // comment out the above and uncomment this to test it locally 
-// const dbConfig = {
-//   host: process.env.POSTGRES_HOST || 'db',   
-//   port: process.env.POSTGRES_PORT || 5432,
-//   database: process.env.POSTGRES_DB || 'your_db_name',
-//   user: process.env.POSTGRES_USER || 'your_db_user',
-//   password: process.env.POSTGRES_PASSWORD || 'your_db_password',
-// };
+const dbConfig = {
+  host: process.env.POSTGRES_HOST || 'db',   
+  port: process.env.POSTGRES_PORT || 5432,
+  database: process.env.POSTGRES_DB || 'your_db_name',
+  user: process.env.POSTGRES_USER || 'your_db_user',
+  password: process.env.POSTGRES_PASSWORD || 'your_db_password',
+};
 
 
 const db = pgp(dbConfig);
@@ -476,19 +476,27 @@ app.post('/trade', async (req, res) => {
   const { offeredItemId, requestedItemId, message } = req.body;
 
   try {
-    await db.none(
-      `INSERT INTO trades (sender_id, receiver_id, offered_item_id, requested_item_id, message, status, created_at)
-       VALUES (
-         $1,
-         (SELECT user_id FROM Items WHERE item_id = $2),
-         $3,
-         $2,
-         $4,
-         'pending',
-         NOW()
-       )`,
-      [senderId, requestedItemId, offeredItemId, message]
-    );
+    await db.tx(async t => {
+      // Insert trade
+      await t.none(`
+        INSERT INTO trades (sender_id, receiver_id, offered_item_id, requested_item_id, message, status, created_at)
+        VALUES (
+          $1,
+          (SELECT user_id FROM Items WHERE item_id = $2),
+          $3,
+          $2,
+          $4,
+          'pending',
+          NOW()
+        )
+      `, [senderId, requestedItemId, offeredItemId, message]);
+
+      // Mark both items as pending
+      await t.none(
+        `UPDATE Items SET status = 'pending' WHERE item_id IN ($1, $2)`,
+        [offeredItemId, requestedItemId]
+      );
+    });
 
     res.redirect('/myTrades');
   } catch (err) {
@@ -496,6 +504,7 @@ app.post('/trade', async (req, res) => {
     res.redirect('/browse');
   }
 });
+
 
 
 
@@ -542,9 +551,9 @@ app.get('/myTrades', async (req, res) => {
         sender.username AS sender_username,
         receiver.username AS receiver_username,
         offered_item.name AS offered_item_name,
-        offered_item.image_url AS offered_item_image,
+        offered_item.image_path AS offered_item_image,
         requested_item.name AS requested_item_name,
-        requested_item.image_url AS requested_item_image
+        requested_item.image_path AS requested_item_image
       FROM trades
       JOIN users AS sender ON trades.sender_id = sender.user_id
       JOIN users AS receiver ON trades.receiver_id = receiver.user_id
@@ -560,6 +569,7 @@ app.get('/myTrades', async (req, res) => {
     res.render('pages/myTrades', { trades: [], error: 'Failed to load trades.' });
   }
 });
+
 
 
 
