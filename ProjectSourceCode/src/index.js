@@ -110,7 +110,7 @@ app.get('/login', (req, res) => {
   res.render('pages/login');
 });
 
-// Show register form
+// Show register form below
 app.get('/register', (req, res) => {
   res.render('pages/register');
 });
