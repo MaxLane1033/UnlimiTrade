@@ -56,23 +56,23 @@ app.use(
 );
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
-// const dbConfig = {
-//   host: process.env.POSTGRES_HOST,
-//   port: process.env.POSTGRES_PORT,
-//   database: process.env.POSTGRES_DB,
-//   user: process.env.POSTGRES_USER,
-//   password: process.env.POSTGRES_PASSWORD,
-// };
+const dbConfig = {
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+};
 
 
 // comment out the above and uncomment this to test it locally 
-const dbConfig = {
-  host: process.env.POSTGRES_HOST || 'db',   
-  port: process.env.POSTGRES_PORT || 5432,
-  database: process.env.POSTGRES_DB || 'your_db_name',
-  user: process.env.POSTGRES_USER || 'your_db_user',
-  password: process.env.POSTGRES_PASSWORD || 'your_db_password',
-};
+// const dbConfig = {
+//   host: process.env.POSTGRES_HOST || 'db',   
+//   port: process.env.POSTGRES_PORT || 5432,
+//   database: process.env.POSTGRES_DB || 'your_db_name',
+//   user: process.env.POSTGRES_USER || 'your_db_user',
+//   password: process.env.POSTGRES_PASSWORD || 'your_db_password',
+// };
 
 
 const db = pgp(dbConfig);
@@ -339,20 +339,30 @@ app.get('/profile', async (req, res) => {
   try {
     const userId = req.session.user.user_id;
 
-    const tradeHistory = await db.any(
-      `SELECT name AS itemName, status, '' AS otherUser
-       FROM Items
-       WHERE user_id = $1`,
-      [userId]
-    );
+    const tradeHistory = await db.any(`
+      SELECT 
+        i.name AS itemName,
+        t.status,
+        CASE 
+          WHEN t.sender_id = $1 THEN u_receiver.username
+          ELSE u_sender.username
+        END AS otherUser
+      FROM trades t
+      JOIN items i ON i.item_id IN (t.offered_item_id, t.requested_item_id)
+      JOIN users u_sender ON t.sender_id = u_sender.user_id
+      JOIN users u_receiver ON t.receiver_id = u_receiver.user_id
+      WHERE (t.sender_id = $1 OR t.receiver_id = $1)
+        AND t.status = 'accepted'
+        AND i.user_id = $1
+      ORDER BY t.created_at DESC
+    `, [userId]);
 
     const postedItems = await db.any(
       `SELECT item_id, name, description, image_path
        FROM Items
        WHERE user_id = $1 AND image_path IS NOT NULL`,
-      [req.session.user.user_id]
+      [userId]
     );
-    
 
     res.render('pages/profile', {
       layout: 'main',
@@ -370,6 +380,7 @@ app.get('/profile', async (req, res) => {
     });
   }
 });
+
 
 // -------------------------------------  Deleting post on profile pic   ----------------------------------------------
 
@@ -505,6 +516,61 @@ app.post('/trade', async (req, res) => {
   }
 });
 
+// -------------------------------------  ROUTES to Accept or Deny a Trade  ----------------------------------------------
+
+app.post('/trade/:id/accept', async (req, res) => {
+  const tradeId = req.params.id;
+
+  try {
+    await db.tx(async t => {
+      await t.none(`UPDATE trades SET status = 'accepted' WHERE id = $1`, [tradeId]);
+
+      // Also update item statuses
+      await t.none(`
+        UPDATE Items SET status = 'traded'
+        WHERE item_id IN (
+          SELECT offered_item_id FROM trades WHERE id = $1
+          UNION
+          SELECT requested_item_id FROM trades WHERE id = $1
+        )`, [tradeId]);
+    });
+
+    req.session.message = { type: 'success', text: 'Trade accepted!' };
+    res.redirect('/myTrades');
+  } catch (err) {
+    console.error('Accept trade error:', err);
+    req.session.message = { type: 'error', text: 'Failed to accept trade.' };
+    res.redirect('/myTrades');
+  }
+});
+
+app.post('/trade/:id/deny', async (req, res) => {
+  const tradeId = req.params.id;
+
+  try {
+    await db.tx(async t => {
+      await t.none(`UPDATE trades SET status = 'denied' WHERE id = $1`, [tradeId]);
+
+      // Revert item statuses back to available
+      await t.none(`
+        UPDATE Items SET status = 'available'
+        WHERE item_id IN (
+          SELECT offered_item_id FROM trades WHERE id = $1
+          UNION
+          SELECT requested_item_id FROM trades WHERE id = $1
+        )`, [tradeId]);
+    });
+
+    req.session.message = { type: 'success', text: 'Trade denied.' };
+    res.redirect('/myTrades');
+  } catch (err) {
+    console.error('Deny trade error:', err);
+    req.session.message = { type: 'error', text: 'Failed to deny trade.' };
+    res.redirect('/myTrades');
+  }
+});
+
+
 
 
 
@@ -563,7 +629,15 @@ app.get('/myTrades', async (req, res) => {
       ORDER BY trades.created_at DESC;
     `, [userId]);
 
-    res.render('pages/myTrades', { trades });
+    const message = req.session.message;
+delete req.session.message;
+
+res.render('pages/myTrades', {
+  trades,
+  message: message || null,
+  userId: req.session.user.user_id
+});
+
   } catch (err) {
     console.error('Error fetching trades:', err);
     res.render('pages/myTrades', { trades: [], error: 'Failed to load trades.' });
