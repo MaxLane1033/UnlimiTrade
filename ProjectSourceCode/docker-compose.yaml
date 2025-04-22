@@ -10,7 +10,7 @@ services:
 
   web:
     image: node:lts
-    user: 'node'
+    user: 'root'
     env_file: .env
     working_dir: /home/node/app/src
     environment:
