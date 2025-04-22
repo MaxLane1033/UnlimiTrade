@@ -1,4 +1,10 @@
 <div class="container mt-4">
+  {{#if message}}
+  <div class="alert alert-{{message.type}}">
+    {{message.text}}
+  </div>
+{{/if}}
+
   <h2 class="mb-4">My Trades</h2>
 
   {{#if error}}
@@ -11,11 +17,32 @@
         <div class="col">
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="card-title">Trade with {{#ifEquals ../user.id sender_id}} {{receiver_username}} {{else}} {{sender_username}} {{/ifEquals}}</h5>
+              <h5 class="card-title">
+                Trade with 
+                {{#ifEquals ../user.id sender_id}} 
+                  {{receiver_username}} 
+                {{else}} 
+                  {{sender_username}} 
+                {{/ifEquals}}
+              </h5>
+              
               <p class="card-text"><strong>Message:</strong> {{message}}</p>
               <p class="card-text"><strong>Status:</strong> {{status}}</p>
 
-              <div class="row">
+              {{#ifEquals status 'pending'}}
+                {{#ifEquals ../userId receiver_id}}
+                  <div class="mt-2 text-center">
+                    <form action="/trade/{{id}}/accept" method="POST" style="display:inline;">
+                      <button type="submit" class="btn btn-success">Accept</button>
+                    </form>
+                    <form action="/trade/{{id}}/deny" method="POST" style="display:inline;">
+                      <button type="submit" class="btn btn-danger">Deny</button>
+                    </form>
+                  </div>
+                {{/ifEquals}}
+              {{/ifEquals}}
+
+              <div class="row mt-3">
                 <div class="col-md-6 text-center">
                   <p><strong>Offered Item:</strong></p>
                   <img src="{{offered_item_image}}" class="img-fluid" alt="Offered Item">
