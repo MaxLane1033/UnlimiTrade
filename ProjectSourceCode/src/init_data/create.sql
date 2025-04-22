@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS Items (
     user_id INT,
     name VARCHAR(100) NOT NULL,
     description TEXT,
+    category VARCHAR(100),
     status VARCHAR(100),
     image_path TEXT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
