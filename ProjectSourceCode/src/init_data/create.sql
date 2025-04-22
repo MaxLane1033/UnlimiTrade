@@ -1,4 +1,12 @@
 
+DROP TABLE IF EXISTS TradeDetails;
+DROP TABLE IF EXISTS TradeBlock;
+DROP TABLE IF EXISTS trades;
+DROP TABLE IF EXISTS Reviews;
+DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS Users;
+
+
 CREATE TABLE IF NOT EXISTS Users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -11,6 +19,7 @@ CREATE TABLE IF NOT EXISTS Items (
     user_id INT,
     name VARCHAR(100) NOT NULL,
     description TEXT,
+    category VARCHAR(100),
     status VARCHAR(100),
     image_path TEXT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)

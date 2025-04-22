@@ -1,91 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Post a New Item</title>
-  
-  <style>
-/* ---- Global reset & helpers ---- */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+  /* ---- Global reset & helpers ---- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;          /* header on top, main content below */
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-  font-family: Arial, sans-serif;
-  color: #fff;
-}
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;          /* header on top, main content below */
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    font-family: Arial, sans-serif;
+    color: #fff;
+  }
 
-/* ---- Header ---- */
-header {
-  width: 100%;
-  text-align: center;
-  padding: 18px 0;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  margin-bottom: 40px;
-}
+  header {
+    width: 100%;
+    text-align: center;
+    padding: 18px 0;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 40px;
+  }
 
+  .post-form {
+    max-width: 500px;
+    width: 90%;
+    margin: 0 auto 40px;            
+    padding: 28px 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
+  .post-form label {
+    font-weight: bold;
+    text-align: center;
+  }
 
-.post-form {
-  max-width: 500px;
-  width: 90%;
-  margin: 0 auto 40px;            
-  padding: 28px 32px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  .post-form input[type="text"],
+  .post-form textarea,
+  .post-form input[type="file"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #000;
+  }
 
+  .post-form textarea { resize: vertical; }
 
-.post-form label {
-  font-weight: bold;
-  text-align: center;
-}
+  .post-form button {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+  }
 
-.post-form input[type="text"],
-.post-form textarea,
-.post-form input[type="file"] {
-  width: 100%;
-  padding: 12px 14px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #000;
-}
-
-.post-form textarea { resize: vertical; }
-
-.post-form button {
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.post-form button:hover {
-  background: rgba(255, 255, 255, 0.4);
-}
+  .post-form button:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
 </style>
 
-</head>
 <body>
   <header><h1>Post a New Item</h1></header>
-{{> message}}
+  {{> message}}
   <form class="post-form" action="/post" method="POST" enctype="multipart/form-data">
+
     <label for="itemName">Item Name</label>
     <input id="itemName" name="itemName" type="text" placeholder="Enter item name" required />
 
     <label for="tradeDetails">Trade Details</label>
     <textarea id="tradeDetails" name="tradeDetails" rows="4" placeholder="Enter trade details" required></textarea>
+
+    
+    <label for="category">Category</label>
+    <select id="category" name="category" required>
+      <option value="" disabled selected>Select a category</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Home Goods">Home Goods</option>
+      <option value="Toys">Toys</option>
+      <option value="Sports">Sports</option>
+      <option value="Books">Books</option>
+    </select>
+    
 
     <label for="itemImage">Upload Item Photo</label>
     <input id="itemImage" name="itemImage" type="file" accept="image/*" />
@@ -93,4 +96,3 @@ header {
     <button type="submit">Post Item</button>
   </form>
 </body>
-</html>

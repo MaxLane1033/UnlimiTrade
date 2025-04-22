@@ -57,11 +57,11 @@ app.use(
 
 // -------------------------------------  DB CONFIG AND CONNECT   ---------------------------------------
 const dbConfig = {
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  database: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
+   host: process.env.POSTGRES_HOST,
+   port: process.env.POSTGRES_PORT,
+   database: process.env.POSTGRES_DB,
+   user: process.env.POSTGRES_USER,
+   password: process.env.POSTGRES_PASSWORD,
 };
 
 
@@ -106,11 +106,11 @@ app.get('/', (req, res) => {
 
 // Show login form
 app.get('/login', (req, res) => {
-  console.log("hello test");
+  
   res.render('pages/login');
 });
 
-// Show register form
+// Show register form below
 app.get('/register', (req, res) => {
   res.render('pages/register');
 });
@@ -191,109 +191,6 @@ app.get('/home', (req, res) => {
   });
 });
 
-// -------------------------------------  ROUTES for courses.hbs   ----------------------------------------------
-
-// You must define "all_courses" and "student_courses" queries (adjust as needed)
-const all_courses = `
-  SELECT course_id, course_name FROM courses ORDER BY course_id;
-`;
-const student_courses = `
-  SELECT c.course_id, c.course_name
-    FROM student_courses sc
-    JOIN courses c ON sc.course_id = c.course_id
-   WHERE sc.student_id = $1;
-`;
-
-app.get('/courses', (req, res) => {
-  const taken = req.query.taken;
-  db.any(taken ? student_courses : all_courses, [req.session.user.student_id])
-    .then(courses => {
-      res.render('pages/courses', {
-        email: req.session.user.email,
-        courses,
-        action: req.query.taken ? 'delete' : 'add',
-      });
-    })
-    .catch(err => {
-      res.render('pages/courses', {
-        courses: [], 
-        email: req.session.user.email,
-        error: true,
-        message: err.message,
-      });
-    });
-});
-
-app.post('/courses/add', (req, res) => {
-  const course_id = parseInt(req.body.course_id);
-  db.tx(async t => {
-    // Check prerequisites
-    const { num_prerequisites } = await t.one(
-      `SELECT num_prerequisites
-         FROM course_prerequisite_count
-        WHERE course_id = $1`,
-      [course_id]
-    );
-
-    if (num_prerequisites > 0) {
-      const [row] = await t.any(
-        `SELECT num_prerequisites_satisfied
-           FROM student_prerequisite_count
-          WHERE course_id = $1
-            AND student_id = $2`,
-        [course_id, req.session.user.student_id]
-      );
-
-      if (!row || row.num_prerequisites_satisfied < num_prerequisites) {
-        throw new Error(`Prerequisites not satisfied for course ${course_id}`);
-      }
-    }
-
-    // Insert into student_courses
-    await t.none(
-      'INSERT INTO student_courses(course_id, student_id) VALUES ($1, $2);',
-      [course_id, req.session.user.student_id]
-    );
-   
-    return t.any(all_courses, [req.session.user.student_id]);
-  })
-    .then(courses => {
-      res.render('pages/courses', {
-        email: req.session.user.email,
-        courses,
-        message: `Successfully added course ${req.body.course_id}`,
-      });
-    })
-    .catch(err => {
-      res.render('pages/courses', {
-        email: req.session.user.email,
-        courses: [],
-        error: true,
-        message: err.message,
-      });
-    });
-});
-
-app.get('/my_courses', (req, res) => {
-  const taken = req.query.taken;
-  db.any(taken ? student_courses : all_courses, [req.session.user.student_id])
-    .then(courses => {
-      res.render('pages/my_courses', {
-        email: req.session.user.email,
-        courses,
-        action: req.query.taken ? 'delete' : 'add',
-      });
-    })
-    .catch(err => {
-      res.render('pages/my_courses', {
-        courses: [],
-        email: req.session.user.email,
-        error: true,
-        message: err.message,
-      });
-    });
-});
-
 // -------------------------------------  ROUTES for logout.hbs   ----------------------------------------------
 app.get('/logout', (req, res) => {
   req.session.destroy(function(err) {
@@ -309,23 +206,25 @@ app.get('/post', (req, res) => {
 
 
 app.post('/post', upload.single('itemImage'), async (req, res) => {
-  const { itemName, tradeDetails } = req.body;
+ 
+  const { itemName, tradeDetails, category } = req.body;
+
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-  
-  if (!itemName || !tradeDetails || !imagePath) {
+  if (!itemName || !tradeDetails || !category || !imagePath) {
     return res.render('pages/post', {
-      error: true,
-      message: 'All fields are required: item name, description, and image.'
+      error  : true,
+      message: 'All fields are required: item name, description, category, and image.'
     });
   }
 
   try {
     await db.none(
-      `INSERT INTO Items (user_id, name, description, status, image_path)
-       VALUES ($1, $2, $3, 'available', $4)`,
-      [req.session.user.user_id, itemName, tradeDetails, imagePath]
+      `INSERT INTO Items (user_id, name, description, category, status, image_path)
+       VALUES ($1, $2, $3, $4, 'available', $5)`,
+      [req.session.user.user_id, itemName, tradeDetails, category, imagePath]
     );
+   
 
     res.redirect('/browse');
   } catch (err) {
@@ -358,7 +257,7 @@ app.get('/profile', async (req, res) => {
     `, [userId]);
 
     const postedItems = await db.any(
-      `SELECT item_id, name, description, image_path
+      `SELECT item_id, name, description, category,image_path
        FROM Items
        WHERE user_id = $1 AND image_path IS NOT NULL`,
       [userId]
@@ -414,7 +313,7 @@ app.get('/browse', async (req, res) => {
   try {
     // Exclude the logged-in user's own items
     const items = await db.any(`
-      SELECT item_id, name, description, image_path, user_id
+      SELECT item_id, name, description, category, status, image_path, user_id
       FROM Items
       WHERE status = 'available'
         AND image_path IS NOT NULL
