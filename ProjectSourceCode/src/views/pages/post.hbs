@@ -68,13 +68,33 @@
 
 <body>
   <header><h1>Post a New Item</h1></header>
+<<<<<<< Updated upstream
   {{> message}}
+=======
+
+  {{> message}}
+
+>>>>>>> Stashed changes
   <form class="post-form" action="/post" method="POST" enctype="multipart/form-data">
+
     <label for="itemName">Item Name</label>
     <input id="itemName" name="itemName" type="text" placeholder="Enter item name" required />
 
     <label for="tradeDetails">Trade Details</label>
     <textarea id="tradeDetails" name="tradeDetails" rows="4" placeholder="Enter trade details" required></textarea>
+
+    
+    <label for="category">Category</label>
+    <select id="category" name="category" required>
+      <option value="" disabled selected>Select a category</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Home Goods">Home Goods</option>
+      <option value="Toys">Toys</option>
+      <option value="Sports">Sports</option>
+      <option value="Books">Books</option>
+    </select>
+    
 
     <label for="itemImage">Upload Item Photo</label>
     <input id="itemImage" name="itemImage" type="file" accept="image/*" />
@@ -82,3 +102,8 @@
     <button type="submit">Post Item</button>
   </form>
 </body>
+<<<<<<< Updated upstream
+=======
+
+</html>
+>>>>>>> Stashed changes
