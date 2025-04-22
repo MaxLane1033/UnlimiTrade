@@ -1,72 +1,69 @@
-
-
 <main class="container py-5">
 
   <!-- === User Info Section === -->
   <section class="text-center mb-5">
-<h2 class="mb-4 text-center text-white">Welcome, {{username}}</h2> <!-- User's name this pops up off to the side it needs to be centered -->
+    <div class="d-flex flex-column align-items-center">
+      <h2 class="mb-4 text-white">Welcome, {{username}}</h2> <!-- ✅ centered -->
 
-    <!-- Profile Picture -->
-    {{#if profile_picture}}
-      <img src="{{profile_picture}}" alt="Profile Picture" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-    {{else}}
-      <img src="/images/default-profile.png" alt="Default Picture" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-    {{/if}}
+      {{#if profile_picture}}
+        <img src="{{profile_picture}}" alt="Profile Picture" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+      {{else}}
+        <img src="/images/default-profile.png" alt="Default Picture" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+      {{/if}}
 
-    <div>
       <a href="/edit-profile" class="btn btn-outline-primary mt-2">Edit Profile</a>
     </div>
   </section>
 
-<!-- === Posted Items Carousel === -->
-<section class="mb-5">
-  <h4 class="text-center fw-bold text-white">Posted Items</h4>
+  <!-- === Posted Items Carousel === -->
+  <section class="mb-5">
+    <h4 class="text-center fw-bold text-white">Posted Items</h4>
 
-  {{#if postedItems.length}}
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        {{#each postedItems}}
-          {{#if this.image_path}}
-            <div class="carousel-item {{#if @first}}active{{/if}}">
-              <img class="d-block w-100" src="{{this.image_path}}" alt="{{this.name}}" style="max-height: 400px; object-fit: contain;">
-              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
-                <h5>{{this.name}}</h5>
-                <p>{{this.description}}</p>
+    {{#if postedItems.length}}
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {{#each postedItems}}
+            {{#if this.image_path}}
+              <div class="carousel-item {{#if @first}}active{{/if}}">
+                <img class="d-block w-100" src="{{this.image_path}}" alt="{{this.name}}" style="max-height: 400px; object-fit: contain;">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                  <h5>{{this.name}}</h5>
+                  <p>{{this.description}}</p>
+                  {{#if this.category}}
+                    <p><small class="text-info">Category: {{this.category}}</small></p> <!-- ✅ Category shown -->
+                  {{/if}}
                   <form action="/delete-item/{{this.item_id}}" method="POST" style="display:inline;">
-                          <button 
-                            type="submit" 
-                            class="btn btn-sm btn-danger mt-2"
-                            onclick="return confirm('Are you sure you want to delete this item?')">
-                            Delete
-                          </button>
+                    <button 
+                      type="submit" 
+                      class="btn btn-sm btn-danger mt-2"
+                      onclick="return confirm('Are you sure you want to delete this item?')">
+                      Delete
+                    </button>
                   </form>
-
-
+                </div>
               </div>
-            </div>
-          {{/if}}
-        {{/each}}
+            {{/if}}
+          {{/each}}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
-
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  {{else}}
-    <p class="text-muted">You have no items currently posted.</p>
-  {{/if}}
-</section>
-
+    {{else}}
+      <p class="text-muted">You have no items currently posted.</p>
+    {{/if}}
+  </section>
 
   <!-- === Trade History Section === -->
   <section class="mb-5">
-  <h4 class="text-center fw-bold text-white">Trade History</h4>
+    <h4 class="text-center fw-bold text-white">Trade History</h4>
     {{#if tradeHistory.length}}
       <ul class="list-group">
         {{#each tradeHistory}}
@@ -80,10 +77,6 @@
       <p class="text-muted">You have no trades yet.</p>
     {{/if}}
   </section>
-
-  {{!-- <!-- === Logout Button === -->
-  <form action="/logout" method="GET" class="text-center">
-    <button type="submit" class="btn btn-danger">Logout</button>
-  </form> --}}
+</body>
 
 </main>
