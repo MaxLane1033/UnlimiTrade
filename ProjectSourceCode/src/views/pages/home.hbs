@@ -11,102 +11,103 @@
         padding: 0;
     }
 
-  header {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  }
+    header {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
 
-  nav button {
-      background-color: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      margin: 0 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-  }
+    nav button {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        margin: 0 5px;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
 
-  nav button:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-  }
+    nav button:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
 
-  .search-bar {
-      margin: 20px auto;
-      text-align: center;
-  }
+    .search-bar {
+        margin: 20px auto;
+        text-align: center;
+    }
 
-  .search-bar input {
-      padding: 10px;
-      width: 50%;
-      border-radius: 5px;
-      border: none;
-  }
+    .search-bar input {
+        padding: 10px;
+        width: 50%;
+        border-radius: 5px;
+        border: none;
+    }
 
-  .section-title {
-      margin-left: 40px;
-      font-weight: bold;
-      font-size: 1.3rem;
-  }
+    .section-title {
+        margin-left: 40px;
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
 
-  .featured, .categories, .active-trades {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-  }
+    .featured, .categories, .active-trades {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+    }
 
-  .item-box, .category-box, .trade-box {
-      background-color: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      width: 150px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  }
+    .item-box, .trade-box {
+        background-color: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        width: 150px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        text-decoration: none;
+        color: white;
+        display: block;
+        transition: background-color 0.3s;
+    }
 
-  footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      background-color: rgba(0, 0, 0, 0.3);
-  }
-</style>
+    .item-box:hover, .trade-box:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
 
+    footer {
+        text-align: center;
+        padding: 15px;
+        font-size: 0.9rem;
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
 <body>
 
-  <div class="search-bar">
-    <input type="text" placeholder="Search for items...">
-  </div>
+  <h1>Welcome to UnlimiTrade!</h1>
 
-  <div class="section-title">Featured Trades</div>
   <div class="featured">
-    <div class="item-box">
-      <strong>Item Name</strong>
-      <p>Trade Details</p>
-    </div>
-    <div class="item-box">
-      <strong>Item Name</strong>
-      <p>Trade Details</p>
-    </div>
-    <div class="item-box">
-      <strong>Item Name</strong>
-      <p>Trade Details</p>
-    </div>
+    <a class="item-box" href="/browse">
+      <strong>Browse Items</strong>
+      <p>Check out items on the market</p>
+    </a>
+    <a class="item-box" href="/myTrades">
+      <strong>My Trades</strong>
+      <p>Trades you have made</p>
+    </a>
   </div>
 
-  <div class="section-title">Your Active Trades</div>
   <div class="active-trades">
-    <div class="trade-box">
-      <strong>Trade Item</strong>
-      <p>Trade Status</p>
-    </div>
-    <div class="trade-box">
-      <strong>Trade Item</strong>
-      <p>Trade Status</p>
-    </div>
+    <a class="trade-box" href="/post">
+      <strong>Post Item</strong>
+      <p>Post an item for others to see</p>
+    </a>
+    <a class="trade-box" href="/profile">
+      <strong>Profile</strong>
+      <p>Check out your profile</p>
+    </a>
   </div>
-</body>
 
+</body>
+</html>
