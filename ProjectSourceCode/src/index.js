@@ -605,6 +605,9 @@ app.get('/privacy', async (req, res) => {
   res.render('pages/privacy');
 })
 
+
+
+//--------------------------------------  ROUTES for myTrades.hbs   ----------------------------------------------
 app.get('/myTrades', async (req, res) => {
   const userId = req.session.user.user_id;
 
@@ -619,7 +622,9 @@ app.get('/myTrades', async (req, res) => {
         offered_item.name AS offered_item_name,
         offered_item.image_path AS offered_item_image,
         requested_item.name AS requested_item_name,
-        requested_item.image_path AS requested_item_image
+        requested_item.image_path AS requested_item_image,
+        trades.sender_id,
+        trades.receiver_id
       FROM trades
       JOIN users AS sender ON trades.sender_id = sender.user_id
       JOIN users AS receiver ON trades.receiver_id = receiver.user_id
@@ -629,20 +634,25 @@ app.get('/myTrades', async (req, res) => {
       ORDER BY trades.created_at DESC;
     `, [userId]);
 
+    // Handle flash message once
     const message = req.session.message;
-delete req.session.message;
+    delete req.session.message;
 
-res.render('pages/myTrades', {
-  trades,
-  message: message || null,
-  userId: req.session.user.user_id
-});
+    res.render('pages/myTrades', {
+      trades,
+      message: message || null,
+      userId
+    });
 
   } catch (err) {
     console.error('Error fetching trades:', err);
-    res.render('pages/myTrades', { trades: [], error: 'Failed to load trades.' });
+    res.render('pages/myTrades', {
+      trades: [],
+      error: 'Failed to load trades.'
+    });
   }
 });
+
 
 
 
