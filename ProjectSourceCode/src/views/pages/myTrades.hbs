@@ -56,16 +56,27 @@
 
               {{#ifEquals status 'pending'}}
                 {{#ifEquals ../userId receiver_id}}
-                  <div class="mt-2 text-center" style="background: rgba(255,0,0,0.1); border: 1px solid red;">
-                    <form action="/trade/{{id}}/accept" method="POST" style="display:inline;">
-                      <button type="submit" class="btn btn-success" style="position: relative; z-index: 9999;">Accept</button>
+                  <div style="
+                    background: rgba(255, 0, 0, 0.1);
+                    border: 1px solid red;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 20px;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin-top: 10px;
+                  ">
+                    <form action="/trade/{{id}}/accept" method="POST" style="margin: 0;">
+                      <button type="submit" class="btn btn-success">✅ Accept</button>
                     </form>
-                    <form action="/trade/{{id}}/deny" method="POST" style="display:inline;">
-                      <button type="submit" class="btn btn-danger" style="position: relative; z-index: 9999;">Deny</button>
+                    <form action="/trade/{{id}}/deny" method="POST" style="margin: 0;">
+                      <button type="submit" class="btn btn-danger">❌ Deny</button>
                     </form>
                   </div>
                 {{/ifEquals}}
               {{/ifEquals}}
+
 
 
 
