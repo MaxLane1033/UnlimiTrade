@@ -257,9 +257,9 @@ app.get('/profile', async (req, res) => {
     `, [userId]);
 
     const postedItems = await db.any(
-      `SELECT item_id, name, description, category,image_path
-       FROM Items
-       WHERE user_id = $1 AND image_path IS NOT NULL`,
+      `SELECT item_id, name, description, category, image_path
+        FROM Items
+        WHERE user_id = $1 AND image_path IS NOT NULL AND status != 'traded'`,
       [userId]
     );
 
