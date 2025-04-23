@@ -28,18 +28,23 @@
   justify-content:center;   /* centres the 3-column strip */
 }
 
-/* ========= cards ========= */
+/* ---------- ITEM-CARD LAYOUT ---------- */
 .item-card{
+  /* existing look & feel … */
   width:100%;
-  max-width:280px;   /* must match the column size above */
+  max-width:280px;
   background:rgba(255,255,255,.1);
   padding:15px;
   border-radius:10px;
-  text-align:center;
   box-shadow:0 2px 6px rgba(0,0,0,.3);
+
+  /* NEW: turn the card into a vertical flex-box */
+  display:flex;
+  flex-direction:column;
+  align-items:center;           /* horizontal centring for all children */
 }
 
-/* keep the thumbnail proportions tidy */
+/* keep the image at the top */
 .item-card img{
   width:100%;
   height:150px;
@@ -48,12 +53,20 @@
   margin-bottom:10px;
 }
 
-/* ========= button centring ========= */
-.item-card form{ margin:0; }          /* cancel the global 555 px rule */
-.item-card button{
-  display:block;                      /* makes margin auto work */
-  margin:10px auto 0;                 /* centred */
+/* ---------- BUTTON CENTRING ---------- */
+.item-card form{
+  width:100%;                   /* so the form spans full card width   */
+  display:flex;                 /* flex wrapper = easy centring        */
+  justify-content:center;       /* centres the button horizontally     */
+  margin:0;                     /* wipe any stray margins              */
 }
+
+.item-card button{
+  /* you already have .btn.btn-primary styles from Bootstrap;
+     no width needed—flexbox keeps it centred */
+  margin-top:10px;              /* small gap above the button          */
+}
+
 </style>
 
 <body>
