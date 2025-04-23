@@ -241,10 +241,8 @@ app.get('/profile', async (req, res) => {
     const tradeHistory = await db.any(`
       SELECT 
         t.status,
-        -- Show both item names clearly
-        offered.name AS offered_item_name,
-        requested.name AS requested_item_name,
-        -- Decide who the other user is
+        offered.name AS offeredItem,
+        requested.name AS requestedItem,
         CASE 
           WHEN t.sender_id = $1 THEN u_receiver.username
           ELSE u_sender.username
@@ -260,12 +258,16 @@ app.get('/profile', async (req, res) => {
     `, [userId]);
     
     
+    
     const postedItems = await db.any(
       `SELECT item_id, name, description, category, image_path
         FROM Items
         WHERE user_id = $1 AND image_path IS NOT NULL AND status != 'traded'`,
       [userId]
     );
+
+    console.log('Trade history:', tradeHistory); // debugging line
+
 
     res.render('pages/profile', {
       layout: 'main',
