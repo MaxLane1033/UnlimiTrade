@@ -529,13 +529,15 @@ app.get('/myTrades', async (req, res) => {
     `, [userId]);
 
     const message = req.session.message;
-delete req.session.message;
 
-res.render('pages/myTrades', {
-  trades,
-  message: message || null,
-  userId: req.session.user.user_id
-});
+  res.render('pages/myTrades', {
+    trades,
+    message: message || null,
+    userId: req.session.user.user_id
+  });
+
+delete req.session.message; // Delete it after rendering
+
 
   } catch (err) {
     console.error('Error fetching trades:', err);
