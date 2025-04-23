@@ -568,6 +568,58 @@ delete req.session.message; // Delete it after rendering
 });
 
 
+// -------------------- Reviews and Profile Logic ----------------------
+
+// GET user profile with reviews
+app.get('/profile/:user_id', async (req, res) => {
+  const profileUserId = req.params.user_id;
+  const currentUserId = req.session.user.user_id;
+
+  try {
+    const user = await db.oneOrNone('SELECT * FROM Users WHERE user_id = $1', [profileUserId]);
+    const items = await db.any('SELECT * FROM Items WHERE user_id = $1', [profileUserId]);
+    const reviews = await db.any(`
+      SELECT Reviews.*, Users.username AS reviewer_name
+      FROM Reviews
+      JOIN Users ON Reviews.reviewer_id = Users.user_id
+      WHERE reviewed_id = $1
+      ORDER BY review_id DESC
+    `, [profileUserId]);
+
+    res.render('pages/profile', {
+      username: user.username,
+      profile_picture: user.profile_picture,
+      postedItems: items,
+      reviews,
+      profile_user_id: profileUserId,
+      current_user_id: currentUserId
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading profile');
+  }
+});
+
+// POST new review
+app.post('/review/:user_id', async (req, res) => {
+  const reviewerId = req.session.user.user_id;
+  const reviewedId = req.params.user_id;
+  const { rating, comment } = req.body;
+
+  try {
+    await db.none(`
+      INSERT INTO Reviews (reviewer_id, reviewed_id, rating, comment)
+      VALUES ($1, $2, $3, $4)
+    `, [reviewerId, reviewedId, rating, comment]);
+
+    res.redirect(`/profile/${reviewedId}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error submitting review');
+  }
+});
+
+
 
 
 // -------------------------------------  START THE SERVER   ----------------------------------------------
