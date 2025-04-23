@@ -242,6 +242,7 @@ app.get('/profile', async (req, res) => {
       SELECT 
         i.name AS itemName,
         t.status,
+        t.created_at,
         CASE 
           WHEN t.sender_id = $1 THEN u_receiver.username
           ELSE u_sender.username
@@ -249,12 +250,14 @@ app.get('/profile', async (req, res) => {
       FROM trades t
       JOIN users u_sender ON t.sender_id = u_sender.user_id
       JOIN users u_receiver ON t.receiver_id = u_receiver.user_id
-      JOIN items i ON (i.item_id = t.offered_item_id OR i.item_id = t.requested_item_id)
+      JOIN items i ON 
+        (i.item_id = t.offered_item_id AND i.user_id = $1) OR
+        (i.item_id = t.requested_item_id AND i.user_id = $1)
       WHERE (t.sender_id = $1 OR t.receiver_id = $1)
         AND t.status = 'accepted'
-        AND i.user_id = $1
       ORDER BY t.created_at DESC;
     `, [userId]);
+    
     
 
     const postedItems = await db.any(
