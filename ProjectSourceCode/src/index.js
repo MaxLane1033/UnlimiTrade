@@ -526,9 +526,11 @@ app.get('/myTrades', async (req, res) => {
       JOIN users AS receiver ON trades.receiver_id = receiver.user_id
       JOIN items AS offered_item ON trades.offered_item_id = offered_item.item_id
       JOIN items AS requested_item ON trades.requested_item_id = requested_item.item_id
-      WHERE trades.sender_id = $1 OR trades.receiver_id = $1
+      WHERE (trades.sender_id = $1 OR trades.receiver_id = $1)
+        AND trades.status = 'pending'
       ORDER BY trades.created_at DESC;
-    `, [userId]);    
+    `, [userId]);
+        
 
     const message = req.session.message;
 
