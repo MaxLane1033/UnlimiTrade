@@ -240,9 +240,11 @@ app.get('/profile', async (req, res) => {
 
     const tradeHistory = await db.any(`
       SELECT 
-        i.name AS itemName,
         t.status,
-        t.created_at,
+        -- Show both item names clearly
+        offered.name AS offered_item_name,
+        requested.name AS requested_item_name,
+        -- Decide who the other user is
         CASE 
           WHEN t.sender_id = $1 THEN u_receiver.username
           ELSE u_sender.username
@@ -250,13 +252,13 @@ app.get('/profile', async (req, res) => {
       FROM trades t
       JOIN users u_sender ON t.sender_id = u_sender.user_id
       JOIN users u_receiver ON t.receiver_id = u_receiver.user_id
-      JOIN items i ON 
-        (i.item_id = t.offered_item_id AND i.user_id = $1) OR
-        (i.item_id = t.requested_item_id AND i.user_id = $1)
+      JOIN items offered ON t.offered_item_id = offered.item_id
+      JOIN items requested ON t.requested_item_id = requested.item_id
       WHERE (t.sender_id = $1 OR t.receiver_id = $1)
         AND t.status = 'accepted'
       ORDER BY t.created_at DESC;
     `, [userId]);
+    
     
     
 
