@@ -240,9 +240,11 @@ app.get('/profile', async (req, res) => {
 
     const tradeHistory = await db.any(`
       SELECT 
-        offered.name AS offeredItem,
-        requested.name AS requestedItem,
         t.status,
+        -- Show both item names clearly
+        offered.name AS offered_item_name,
+        requested.name AS requested_item_name,
+        -- Decide who the other user is
         CASE 
           WHEN t.sender_id = $1 THEN u_receiver.username
           ELSE u_sender.username
@@ -258,9 +260,6 @@ app.get('/profile', async (req, res) => {
     `, [userId]);
     
     
-    
-    
-
     const postedItems = await db.any(
       `SELECT item_id, name, description, category, image_path
         FROM Items
