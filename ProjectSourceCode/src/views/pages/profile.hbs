@@ -79,4 +79,34 @@
     {{/if}}
   </section>
 
+
+<!-- === Reviews Section === -->
+<section class="mt-5 text-white">
+  <h4>Reviews</h4>
+
+  <!-- Display existing reviews -->
+  {{#each reviews}}
+    <div class="border rounded p-3 mb-3 bg-dark text-light">
+      <strong>{{reviewer_name}}:</strong>
+      <span class="ms-2">Rating: {{rating}}/5</span>
+      <p class="mt-1">{{comment}}</p>
+    </div>
+  {{/each}}
+
+  <!-- Leave a Review -->
+  <form action="/review/{{profile_user_id}}" method="POST" class="mt-4">
+    <div class="mb-3">
+      <label for="rating" class="form-label">Rating (1-5)</label>
+      <input type="number" min="1" max="5" name="rating" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">Your Review</label>
+      <textarea name="comment" class="form-control" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+  </form>
+</section>
+
+
+
 </main>
