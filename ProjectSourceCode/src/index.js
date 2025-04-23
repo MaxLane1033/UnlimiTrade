@@ -241,10 +241,17 @@ app.get('/profile', async (req, res) => {
     const tradeHistory = await db.any(`
       SELECT 
         t.status,
-        -- Show both item names clearly
-        offered.name AS offered_item_name,
-        requested.name AS requested_item_name,
-        -- Decide who the other user is
+        -- Flip the item perspective depending on user role
+        CASE 
+          WHEN t.sender_id = $1 THEN offered.name
+          ELSE requested.name
+        END AS your_item,
+    
+        CASE 
+          WHEN t.sender_id = $1 THEN requested.name
+          ELSE offered.name
+        END AS their_item,
+    
         CASE 
           WHEN t.sender_id = $1 THEN u_receiver.username
           ELSE u_sender.username
@@ -258,6 +265,7 @@ app.get('/profile', async (req, res) => {
         AND t.status = 'accepted'
       ORDER BY t.created_at DESC;
     `, [userId]);
+    
     
     
     

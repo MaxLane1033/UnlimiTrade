@@ -66,16 +66,14 @@
     <h4 class="text-center fw-bold text-white">Trade History</h4>
     {{#if tradeHistory.length}}
       <ul class="list-group">
-        {{#each tradeHistory}}
-          <strong>You traded:</strong> {{this.offered_item_name}}  
-          <br />
-          <strong>For:</strong> {{this.requested_item_name}}  
-          <br />
+      {{#each tradeHistory}}
+        <li class="list-group-item">
+          <strong>You traded:</strong> {{this.your_item}}<br />
+          <strong>For:</strong> {{this.their_item}}<br />
           <small>Status: {{this.status}} – Traded with: {{this.otherUser}}</small>
-
-
-        {{/each}}
-      </ul>
+        </li>
+      {{/each}}
+    </ul>
     {{else}}
       <p class="text-muted">You have no trades yet.</p>
     {{/if}}
