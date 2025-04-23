@@ -1,26 +1,4 @@
-  <!-- Styles temporarily commented out becuase it is ruining the functionality of the buttons -->
- 
-  {{!-- <style>
-  body {
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    font-family: Arial, sans-serif;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-  }
-
-  .search-bar {
-    text-align: center;
-    margin: 20px 0;
-  }
-
-  .search-bar input {
-    padding: 10px;
-    width: 60%;
-    border-radius: 5px;
-    border: none;
-  }
-
+<style>
   .content {
     display: flex;
     padding: 20px;
@@ -28,19 +6,26 @@
   }
 
   .filters {
-    width: 200px;
+    width: 220px;
     background: rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   }
 
-  .filters input {
+  .filters label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  .filters input,
+  .filters select {
     width: 100%;
     padding: 8px;
-    margin-bottom: 15px;
     border-radius: 5px;
     border: none;
+    margin-bottom: 10px;
   }
 
   .items-section {
@@ -51,6 +36,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
+    margin-top: 20px;
   }
 
   .item-card {
@@ -66,17 +52,7 @@
     height: 150px;
     object-fit: contain;
     margin-bottom: 10px;
-    background-color: #111; /* fallback background */
-  }
-
-  .item-card button {
-    background: #00bfff;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+    background-color: #111;
   }
 
   .pagination {
@@ -88,24 +64,7 @@
     margin: 0 5px;
     cursor: pointer;
   }
-
-  footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 0.9rem;
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  a {
-    color: #fff;
-    text-decoration: underline;
-  }
-
-  a:hover {
-    color: #ddd;
-  }
-</style> --}}
-
+</style>
 
 <body>
   <div class="search-bar">
@@ -115,16 +74,24 @@
   <div class="content">
     <div class="filters">
       <h3>Filters</h3>
-      <label>Categories</label>
-      <input type="text" placeholder="e.g. Electronics">
-      <label>Condition</label>
-      <input type="text" placeholder="e.g. New, Used">
+
+      <label for="category">Category</label>
+      <select id="category" name="category" class="form-control">
+        <option value="">-- Select --</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Books">Books</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Games">Games</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="condition">Condition</label>
+      <input type="text" id="condition" placeholder="e.g. New, Used" class="form-control">
     </div>
 
     <div class="items-section">
       <h2>Items Available for Trade</h2>
 
-      <!-- ——— dynamic item loop ——— -->
       <div class="items-grid">
         {{#if items.length}}
           {{#each items}}
@@ -132,8 +99,8 @@
               <img src="{{#if image_path}}{{image_path}}{{else}}https://via.placeholder.com/100{{/if}}" alt="{{name}}">
               <strong>{{name}}</strong>
               <p>{{description}}</p>
-              <form action="/trade/{{item_id}}" method="GET">
-                <button type="submit">Trade Now</button>
+              <form action="/trade/{{item_id}}" method="GET" style="margin: 0;">
+                <button type="submit" class="btn btn-primary">Trade Now</button>
               </form>
             </div>
           {{/each}}
@@ -143,7 +110,6 @@
           </p>
         {{/if}}
       </div>
-      <!-- ——— end item loop ——— -->
 
       <div class="pagination">
         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>&gt;&gt;</span>
