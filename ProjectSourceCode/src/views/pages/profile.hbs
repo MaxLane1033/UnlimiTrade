@@ -3,7 +3,7 @@
   <!-- === User Info Section === -->
   <section class="text-center mb-5">
     <div class="d-flex flex-column align-items-center">
-      <h2 class="mb-4 text-white">Welcome, {{username}}</h2> <!-- ✅ centered -->
+      <h2 class="mb-4 text-white">Welcome, {{username}}</h2> <!-- centered -->
 
       {{#if profile_picture}}
         <img src="{{profile_picture}}" alt="Profile Picture" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
@@ -30,7 +30,7 @@
                   <h5>{{this.name}}</h5>
                   <p>{{this.description}}</p>
                   {{#if this.category}}
-                    <p><small class="text-info">Category: {{this.category}}</small></p> <!-- ✅ Category shown -->
+                    <p><small class="text-info">Category: {{this.category}}</small></p> <!-- Category shown -->
                   {{/if}}
                   <form action="/delete-item/{{this.item_id}}" method="POST" style="display:inline;">
                     <button 
