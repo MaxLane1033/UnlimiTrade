@@ -67,11 +67,12 @@
     {{#if tradeHistory.length}}
       <ul class="list-group">
         {{#each tradeHistory}}
-          <li class="list-group-item">
-        <strong>You traded:</strong> {{this.offeredItem}}<br />
-        <strong>For:</strong> {{this.requestedItem}}<br />
-        <small>Status: {{this.status}}{{#if this.otherUser}} – {{this.otherUser}}{{/if}}</small>
-      </li>
+          <strong>You traded:</strong> {{this.offered_item_name}}  
+          <br />
+          <strong>For:</strong> {{this.requested_item_name}}  
+          <br />
+          <small>Status: {{this.status}} – Traded with: {{this.otherUser}}</small>
+
 
         {{/each}}
       </ul>
