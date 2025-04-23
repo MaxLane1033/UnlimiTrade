@@ -57,15 +57,16 @@
               {{#ifEquals status 'pending'}}
                 {{#ifEquals ../userId receiver_id}}
                   <div class="mt-2 text-center" style="background: rgba(255,0,0,0.1); border: 1px solid red;">
-                  <form action="/trade/{{id}}/accept" method="POST" style="display:inline;">
-                    <button type="submit" class="btn btn-success" style="display: inline !important; visibility: visible !important; opacity: 1 !important;">Accept</button>
-                  </form>
-                  <form action="/trade/{{id}}/deny" method="POST" style="display:inline;">
-                    <button type="submit" class="btn btn-danger" style="display: inline !important; visibility: visible !important; opacity: 1 !important;">Deny</button>
-                  </form>
-                </div>
+                    <form action="/trade/{{id}}/accept" method="POST" style="display:inline;">
+                      <button type="submit" class="btn btn-success" style="position: relative; z-index: 9999;">Accept</button>
+                    </form>
+                    <form action="/trade/{{id}}/deny" method="POST" style="display:inline;">
+                      <button type="submit" class="btn btn-danger" style="position: relative; z-index: 9999;">Deny</button>
+                    </form>
+                  </div>
                 {{/ifEquals}}
               {{/ifEquals}}
+
 
 
               <div class="row mt-3">
