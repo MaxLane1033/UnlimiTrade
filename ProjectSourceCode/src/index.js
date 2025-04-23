@@ -258,6 +258,7 @@ app.get('/profile', async (req, res) => {
     `, [userId]);
     
     
+    console.log('Trade history:', tradeHistory); 
     
     const postedItems = await db.any(
       `SELECT item_id, name, description, category, image_path
