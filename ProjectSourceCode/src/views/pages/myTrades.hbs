@@ -27,7 +27,18 @@
               </h5>
               
               <p class="card-text"><strong>Message:</strong> {{message}}</p>
-              <p class="card-text"><strong>Status:</strong> {{status}}</p>
+              <p class="card-text"><strong>Status:</strong>
+              {{#ifEquals status 'pending'}}
+                {{#ifEquals ../userId receiver_id}}
+                  waiting for your response (accept or deny)
+                {{else}}
+                  pending
+                {{/ifEquals}}
+              {{else}}
+                {{status}}
+              {{/ifEquals}}
+              </p>
+
 
               {{#ifEquals status 'pending'}}
                 {{#ifEquals ../userId receiver_id}}
