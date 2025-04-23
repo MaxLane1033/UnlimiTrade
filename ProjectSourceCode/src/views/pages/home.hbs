@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>UnlimiTrade</title>
   <style>
     body {
         background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
@@ -9,70 +10,50 @@
         color: white;
         margin: 0;
         padding: 0;
-    }
-
-    header {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 10px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    nav button {
-        background-color: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: white;
-        margin: 0 5px;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-
-    nav button:hover {
-        background-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .search-bar {
-        margin: 20px auto;
-        text-align: center;
-    }
-
-    .search-bar input {
-        padding: 10px;
-        width: 50%;
-        border-radius: 5px;
-        border: none;
-    }
-
-    .section-title {
-        margin-left: 40px;
-        font-weight: bold;
-        font-size: 1.3rem;
-    }
-
-    .featured, .categories, .active-trades {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        padding: 20px;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .item-box, .trade-box {
-        background-color: rgba(255,255,255,0.1);
-        padding: 15px;
-        border-radius: 10px;
+    h1 {
         text-align: center;
-        width: 150px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        font-size: 2.5rem;
+        margin-top: 50px;
+        margin-bottom: 40px;
+        font-weight: bold;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        max-width: 900px;
+    }
+
+    .btn-box {
+        background-color: rgba(255,255,255,0.1);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        text-align: center;
+        width: 200px;
         text-decoration: none;
         color: white;
-        display: block;
-        transition: background-color 0.3s;
+        transition: transform 0.3s, background-color 0.3s;
+        font-weight: bold;
+        font-size: 1.1rem;
     }
 
-    .item-box:hover, .trade-box:hover {
+    .btn-box:hover {
         background-color: rgba(255,255,255,0.2);
+        transform: translateY(-5px);
+    }
+
+    .btn-box p {
+        font-weight: normal;
+        margin-top: 10px;
+        font-size: 0.9rem;
     }
 
     footer {
@@ -80,37 +61,41 @@
         padding: 15px;
         font-size: 0.9rem;
         background-color: rgba(0, 0, 0, 0.3);
+        width: 100%;
+        margin-top: 50px;
     }
-    h1 {
-        margin-left: 535px;
-    }
+
   </style>
 </head>
 <body>
 
   <h1>Welcome to UnlimiTrade!</h1>
 
-  <div class="featured">
-    <a class="item-box" href="/browse">
-      <strong>Browse Items</strong>
+  <div class="container">
+    <a class="btn-box" href="/browse">
+      Browse Items
       <p>Check out items on the market</p>
     </a>
-    <a class="item-box" href="/myTrades">
-      <strong>My Trades</strong>
-      <p>Trades you have made</p>
+
+    <a class="btn-box" href="/myTrades">
+      My Trades
+      <p>View your trade history</p>
+    </a>
+
+    <a class="btn-box" href="/post">
+      Post Item
+      <p>List your items for trade</p>
+    </a>
+
+    <a class="btn-box" href="/profile">
+      Profile
+      <p>Manage your account</p>
     </a>
   </div>
 
-  <div class="active-trades">
-    <a class="trade-box" href="/post">
-      <strong>Post Item</strong>
-      <p>Post an item for others to see</p>
-    </a>
-    <a class="trade-box" href="/profile">
-      <strong>Profile</strong>
-      <p>Check out your profile</p>
-    </a>
-  </div>
+  <footer>
+    © 2025 UnlimiTrade | About | Terms | Privacy
+  </footer>
 
 </body>
 </html>
