@@ -618,12 +618,13 @@ app.get('/profile/:user_id', async (req, res) => {
 
 // POST new review
 app.post('/review/:user_id', async (req, res) => {
+  //console.log("🚨 HIT POST /review/:user_id");
   const reviewerId = req.session.user.user_id;
   const reviewedId = req.params.user_id;
   const { rating, comment } = req.body;
 
-  console.log("Submitting review from:", reviewerId);
-  console.log("Review data:", { rating, comment });
+  //console.log("Submitting review from:", reviewerId);
+  //console.log("Review data:", { rating, comment });
 
   try {
     await db.none(`
