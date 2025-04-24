@@ -67,50 +67,57 @@
   margin-top:10px;              /* small gap above the button          */
 }
 
+/* Ensure filter content is left-aligned */
+/* Fix alignment and width of the form and select */
+.filters form {
+  width: 150%;
+}
+
+.filters select.form-control {
+  text-align: left !important;
+  margin: 0 !important;
+}
+
 </style>
 
-<body>
-
-  <div class="content">
-    <div class="filters">
-      <h3>Filters</h3>
-
+<div class="content">
+  <div class="filters">
+    <h3>Filters</h3>
+    <form method="GET" action="/browse">
       <label for="category">Category</label>
-      <select id="category" name="category" class="form-control">
+      <select id="category" name="category" class="form-control" onchange="this.form.submit()">
         <option value="">-- Select --</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Books">Books</option>
-        <option value="Clothing">Clothing</option>
-        <option value="Toys">Games</option>
-        <option value="Sports">Other</option>
-        <option value="Home Goods">Other</option>
+        <option value="Electronics" {{#ifEquals selectedCategory "Electronics"}}selected{{/ifEquals}}>Electronics</option>
+        <option value="Clothing" {{#ifEquals selectedCategory "Clothing"}}selected{{/ifEquals}}>Clothing</option>
+        <option value="Home Goods" {{#ifEquals selectedCategory "Home Goods"}}selected{{/ifEquals}}>Home Goods</option>
+        <option value="Toys" {{#ifEquals selectedCategory "Toys"}}selected{{/ifEquals}}>Toys</option>
+        <option value="Sports" {{#ifEquals selectedCategory "Sports"}}selected{{/ifEquals}}>Sports</option>
+        <option value="Books" {{#ifEquals selectedCategory "Books"}}selected{{/ifEquals}}>Books</option>
+        <option value="Other" {{#ifEquals selectedCategory "Other"}}selected{{/ifEquals}}>Other</option>
       </select>
+    </form>
+  </div>
 
-      
-    </div>
-
-    <div class="items-section">
-      <h2>Items Available for Trade</h2>
-
-      <div class="items-grid">
-        {{#if items.length}}
-          {{#each items}}
-            <div class="item-card">
-              <img src="{{#if image_path}}{{image_path}}{{else}}https://via.placeholder.com/100{{/if}}" alt="{{name}}">
-              <strong>{{name}}</strong>
-              <p>{{description}}</p>
-              <form action="/trade/{{item_id}}" method="GET" style="margin: 0;">
-                <button type="submit" class="btn btn-primary">Trade Now</button>
-              </form>
-              <a href="/profile/{{user_id}}" class="btn btn-outline-light btn-sm mt-2">View Profile</a>
-            </div>
-          {{/each}}
-        {{else}}
-          <p style="grid-column:1 / -1; text-align:center;">
-            No items posted yet — come back later!
-          </p>
-        {{/if}}
-      </div>
+  <div class="items-section">
+    <h2>Items Available for Trade</h2>
+    <div class="items-grid">
+      {{#if items.length}}
+        {{#each items}}
+          <div class="item-card">
+            <img src="{{#if image_path}}{{image_path}}{{else}}https://via.placeholder.com/100{{/if}}" alt="{{name}}">
+            <strong>{{name}}</strong>
+            <p>{{description}}</p>
+            <form action="/trade/{{item_id}}" method="GET" style="margin: 0;">
+              <button type="submit" class="btn btn-primary">Trade Now</button>
+            </form>
+            <a href="/profile/{{user_id}}" class="btn btn-outline-light btn-sm mt-2">View Profile</a>
+          </div>
+        {{/each}}
+      {{else}}
+        <p style="grid-column:1 / -1; text-align:center;">
+          No items posted yet — come back later!
+        </p>
+      {{/if}}
     </div>
   </div>
-</body>
+</div>

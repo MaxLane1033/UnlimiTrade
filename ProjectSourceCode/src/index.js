@@ -328,24 +328,39 @@ app.get('/edit-profile', (req, res) => {
 
 // -------------------------------------  ROUTES for browse.hbs   ----------------------------------------------
 app.get('/browse', async (req, res) => {
-  try {
-    // Exclude the logged-in user's own items
-    const items = await db.any(`
-      SELECT item_id, name, description, category, status, image_path, user_id
-      FROM Items
-      WHERE status = 'available'
-        AND image_path IS NOT NULL
-        AND user_id != $1
-      ORDER BY item_id DESC
-    `, [req.session.user.user_id]);
+  const { category } = req.query;
+  const currentUserId = req.session.user.user_id;
 
-    console.log('[Browse] fetched rows:', items.length); // quick sanity check
+  try {
+    let items;
+
+    if (category) {
+      items = await db.any(`
+        SELECT item_id, name, description, category, status, image_path, user_id
+        FROM Items
+        WHERE status = 'available'
+          AND image_path IS NOT NULL
+          AND user_id != $1
+          AND category = $2
+        ORDER BY item_id DESC
+      `, [currentUserId, category]);
+    } else {
+      items = await db.any(`
+        SELECT item_id, name, description, category, status, image_path, user_id
+        FROM Items
+        WHERE status = 'available'
+          AND image_path IS NOT NULL
+          AND user_id != $1
+        ORDER BY item_id DESC
+      `, [currentUserId]);
+    }
 
     res.render('pages/browse', {
       layout: 'main',
       pageTitle: 'Browse',
       items,
-      currentUserId: req.session.user.user_id // Optional: useful for frontend conditionals
+      selectedCategory: category || '',
+      currentUserId
     });
   } catch (err) {
     console.error('[Browse] DB error:', err);
@@ -358,6 +373,7 @@ app.get('/browse', async (req, res) => {
     });
   }
 });
+
 
 
 
