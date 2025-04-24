@@ -1,0 +1,45 @@
+
+
+FEATURE 1.  User should be able to post an item to the “explore trades” page:
+
+Test case: verify that a user who is actively logged-in can post a new item to the Explore Trades page. The user should be able to add/describe the item with all the required information, and then the item should successfully appear on the Explore Trades page for other users to see. 
+Test data: Our test data could be any random item, I will use a snowboard for this example. 
+Item Name: “Burton Snowboard”
+Description: “Beautiful colors, 150cm, great for powder riding. Looking to trade for other mountain gear.”
+Condition: “Mediocre”
+Image: board.jpg (this would of course render and show up on the website)
+Contact Info: contactemail@colorado.edu
+Test environment: We will use the same test environment that we have been using for previous labs to test out all of our features. For this particular feature, we will of course be utilizing port 3000 AKA http://localhost:3000. We will also use the same format as the labs to connect our database → server (docker containers, etc). Lastly, we will push all of our changes to our main GitHub repository, even though each individual of our team will test our program on their own local machines. 
+Test steps: 
+Login successfully, verify yourself as a valid user
+Navigate on the website to the “Post Item” page via clicking on the “Post Item” logo from the nav bar. 
+Fill out the form to post an item, enter in the test data listed above, and then submit the item.
+Lastly, navigate back to the “Explore Trades” page, and make sure the new item is visible to other users and the current user. (Part of this step may need to be completed by a different individual, to make sure the item is visible to all users) 
+Results: the expected result is that both the user who posted the item and other users can go to the “Explore Trades” page and see the new item there, with it’s correct image, description, name, etc visible to other users. Users should also be able to click the item which opens up more details about the item, (full description, expected market price, etc) although this will likely be implemented later on. 
+User Acceptance Testers: the user acceptance testers will be both the individual who posted the item originally (the “source” we’ll call it) and other non-source individuals who are looking on the “Explore Trades” page. 
+
+
+
+FEATURE 2. USER CAN SUCCESSFULLY LOGIN TO THEIR ACCOUNT WHEN THEY ENTER THE RIGHT LOGIN CREDENTIALS:
+
+Test case: Confirm that a user who has already registered their credentials can input said credentials into the login page and be successfully redirected to the home page / can successfully login to their account. 
+Test data: Our test data will be any unique user login credentials, for example username = user2323 and password = testpass123456.
+Test environment: The SQL table of all valid users must contain the above credentials in this test environment. Outside of that, we will use the same test environment that we have been using for previous labs to test out all of our features. For this particular feature, we will of course be utilizing port 3000 AKA http://localhost:3000. We will also use the same format as the labs to connect our database → server (docker containers, etc). Lastly, we will push all of our changes to our main GitHub repository, even though each individual of our team will test our program on their own local machines. 
+Test steps: user will register their credentials, and then be redirected to the login page. At the login page, they will enter said credentials, and press submit/login.
+The expected result of the above steps is that the user will be redirected to the home/main page, and their session will be created on the website.
+User Acceptance Tester: in this case the tester can be any user with a valid account, meaning, any user who has registered their credentials. For example, it could be me, (the developer) with the credentials: username = user2323 and password = testpass123456.
+
+
+
+FEATURE 3. USER CAN CLICK ON AN ITEM FROM WITHIN THE “EXPLORE TRADES” PAGE TO VIEW / EXPAND MORE INFORMATION ABOUT THE ITEM.
+
+Test Case: Confirm that users can click on any given item from within the “Explore Trades” page and be redirected to a new page tailored specifically for that item, and be shown more detailed information about that item.
+Test data: Our test data will be an item that exists within the database, here’s the example: 
+Name = Playstation 4
+Description = Brand new, barely used, comes with 2 controllers
+Condition = Excellent
+Contact info = max@gmail.com
+Test Environment = We will be using the same test environment as explained in both features above, making sure that the database contains the test item data (from above) that we are to be experimenting with. 
+Test steps = Navigate to Explore trades page, locate “Playstation 4”, and then click on the “view more” button within that item’s box.
+Expected result = user is taken to the item detail page, containing the full item description, expected market value, and other further information/details about the item.
+User Acceptance Tester = Any developer logged in as a valid user who is searching around the Explore Items page. 
