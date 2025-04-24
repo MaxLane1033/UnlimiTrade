@@ -1,39 +1,85 @@
-<main class="container py-5 text-center text-white">
-  <h1 class="mb-5">Welcome to UnlimiTrade!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UnlimiTrade</title>
+  <style>
+    body {
+      background: #203a43;
+      font-family: Arial, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
 
-  <div class="row justify-content-center g-4">
+    h1 {
+      margin: 20px 0 10px;
+      font-size: 3rem;
+      text-align: center;
+    }
 
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-primary hover-glow">
-        <h5 class="fw-bold">Browse Items</h5>
-        <p>Check out items currently on the market</p>
-        <a href="/browse" class="btn btn-outline-light mt-2">Explore</a>
-      </div>
+    .tiles-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px 5%;
+      gap: 40px;
+    }
+
+    .tile {
+      background-color: #2c5364;
+      border-radius: 12px;
+      padding: 40px 30px;
+      width: 280px;
+      max-width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .tile:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .tile-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .tile-desc {
+      font-size: 0.95rem;
+      color: #ff4d4d; /* red for pop */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to UnlimiTrade!</h1>
+
+  <div class="tiles-container">
+    <div class="tile">
+      <div class="tile-title">Browse Items</div>
+      <div class="tile-desc">Check out items currently on the market</div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-success hover-glow">
-        <h5 class="fw-bold">My Trades</h5>
-        <p>View your pending and requested trades</p>
-        <a href="/myTrades" class="btn btn-outline-light mt-2">View Trades</a>
-      </div>
+    <div class="tile">
+      <div class="tile-title">My Trades</div>
+      <div class="tile-desc">View your pending and requested trades</div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-info hover-glow">
-        <h5 class="fw-bold">Post Item</h5>
-        <p>List your items for trade</p>
-        <a href="/post" class="btn btn-outline-light mt-2">Post Now</a>
-      </div>
+    <div class="tile">
+      <div class="tile-title">Post Item</div>
+      <div class="tile-desc">List your items for trade</div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-warning hover-glow">
-        <h5 class="fw-bold">Profile</h5>
-        <p>Manage your account and see your trade history</p>
-        <a href="/profile" class="btn btn-outline-light mt-2">Go to Profile</a>
-      </div>
+    <div class="tile">
+      <div class="tile-title">Profile</div>
+      <div class="tile-desc">Manage your account and see your trade history</div>
     </div>
-
   </div>
-</main>
+
+</body>
+</html>
+
