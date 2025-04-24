@@ -58,6 +58,6 @@ To run the app locally, ensure you have the following installed:
    go into the code editors terminal and docker compose up
 4. **Open application in brower**
    type in localhost:3000 into your browser and you should be good to go
-   
-# Application Deployment
+---
+## Application Deployment
 [https://unlimitrade-aklk.onrender.com/](url)
