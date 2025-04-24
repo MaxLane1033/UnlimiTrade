@@ -1,18 +1,53 @@
 # UnlimiTrade
 
-Lab 9 Writeup: https://docs.google.com/document/d/1eC8YVGwrS0KsNf2nM3XkxCdFqOMeHYSsesxaIOhrXTk/edit?tab=t.0
+UnlimiTrade is a web-based item trading platform designed for students to exchange goods and services with each other securely and efficiently. Users can register, post items for trade with images and descriptions, browse available items, initiate trade offers, and manage their trade history — all from a user-friendly interface. Google OAuth is also supported for seamless login.
 
+---
 
-1. Brief Application description --> Our application will contain a website that has public users, all with public profiles, who have accounts in which they can trade items with other users that are on the website. There will not be any purchasing on this website, so no credit card information will be necessary which eliminates a huge security risk.
+## 👥 Contributors
 
-2. Contributors - In this case, it will be the team Members
+- [Asher Siegel]
+- Connor Short
+- [Teammate 2 Name]
+- [Teammate 3 Name]
 
-3. Technology Stack used for the project
-   
-4. Prerequisites to run the application - Any software that needs to be installed to run the application
-   
-5. Instructions on how to run the application locally.
-   
-6. How to run the tests
-   
-7. Link to the deployed application
+---
+
+## 🛠️ Technology Stack
+
+### Backend:
+- Node.js
+- Express.js
+- PostgreSQL
+- Passport.js (Local and Google OAuth strategies)
+
+### Frontend:
+- HTML
+- CSS (custom + Bootstrap)
+- Handlebars (templating engine)
+- JavaScript
+
+### Other Tools:
+- Docker (for containerization)
+- Render (for deployment)
+- Multer (for image uploads)
+
+---
+
+## 🧰 Prerequisites
+
+To run the app locally, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/) (if using containerized setup)
+- [Git](https://git-scm.com/)
+
+---
+
+## 🚀 Getting Started (Run Locally)
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/unlimitrade.git
+   cd unlimitrade
