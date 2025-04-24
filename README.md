@@ -4,27 +4,28 @@ UnlimiTrade is a web-based item trading platform designed for students to exchan
 
 ---
 
-## 👥 Contributors
+## Contributors
 
-- [Asher Siegel]
+- Asher Siegel
 - Connor Short
-- [Teammate 2 Name]
-- [Teammate 3 Name]
+- Yasir Qasemi
+- Max Lane
+- Ethan Doyle
+- Ivan Gorodinski
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend:
 - Node.js
 - Express.js
 - PostgreSQL
-- Passport.js (Local and Google OAuth strategies)
 
 ### Frontend:
 - HTML
-- CSS (custom + Bootstrap)
-- Handlebars (templating engine)
+- CSS
+- Handlebars
 - JavaScript
 
 ### Other Tools:
@@ -34,20 +35,29 @@ UnlimiTrade is a web-based item trading platform designed for students to exchan
 
 ---
 
-## 🧰 Prerequisites
+## Prerequisites
 
 To run the app locally, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [Node.js](https://nodejs.org/) 
 - [PostgreSQL](https://www.postgresql.org/)
-- [Docker](https://www.docker.com/) (if using containerized setup)
+- [Docker](https://www.docker.com/)
 - [Git](https://git-scm.com/)
 
 ---
 
-## 🚀 Getting Started (Run Locally)
+## Getting Started (Run Locally)
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/unlimitrade.git
+1. **Clone the repository**
+   open your computer's terminal to bash
+   git clone https://github.com/MaxLane1033/UnlimiTrade.git
    cd unlimitrade
+2. **Open code editor(VSCode works best)**
+   open the Unlimitrade foler
+3. **Docker compose up**
+   go into the code editors terminal and docker compose up
+4. **Open application in brower**
+   type in localhost:3000 into your browser and you should be good to go
+   
+# Application Deployment
+[https://unlimitrade-aklk.onrender.com/](url)
