@@ -624,7 +624,7 @@ app.post('/review/:user_id', async (req, res) => {
   const { rating, comment } = req.body;
 
   //console.log("Submitting review from:", reviewerId);
-  //console.log("Review data:", { rating, comment });
+  //console.log("Review data:", { rating, comment }); test
 
   try {
     await db.none(`
