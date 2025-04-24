@@ -622,6 +622,9 @@ app.post('/review/:user_id', async (req, res) => {
   const reviewedId = req.params.user_id;
   const { rating, comment } = req.body;
 
+  console.log("Submitting review from:", reviewerId);
+  console.log("Review data:", { rating, comment });
+
   try {
     await db.none(`
       INSERT INTO Reviews (reviewer_id, reviewed_id, rating, comment)
