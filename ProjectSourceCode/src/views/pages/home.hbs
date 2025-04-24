@@ -1,76 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>UnlimiTrade</title>
-  <style>
-    body {
-      background: #203a43;
-      font-family: Arial, sans-serif;
-      color: white;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
+<main class="container py-5 text-center text-white">
+  <h1 class="mb-5">Welcome to UnlimiTrade!</h1>
 
-    h1 {
-      margin-top: 40px;
-      margin-bottom: 30px;
-    }
+  <div class="row justify-content-center g-4">
 
-    .container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px;
-    }
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-primary hover-glow">
+        <h5 class="fw-bold">Browse Items</h5>
+        <p>Check out items currently on the market</p>
+        <a href="/browse" class="btn btn-outline-light mt-2">Explore</a>
+      </div>
+    </div>
 
-    .btn-box {
-      background-color: #2c5364;
-      border-radius: 8px;
-      padding: 20px;
-      width: 180px;
-      text-decoration: none;
-      color: white;
-      display: block;
-    }
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-success hover-glow">
+        <h5 class="fw-bold">My Trades</h5>
+        <p>View your pending and requested trades</p>
+        <a href="/myTrades" class="btn btn-outline-light mt-2">View Trades</a>
+      </div>
+    </div>
 
-    .btn-box:hover {
-      background-color: #345f74;
-    }
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-info hover-glow">
+        <h5 class="fw-bold">Post Item</h5>
+        <p>List your items for trade</p>
+        <a href="/post" class="btn btn-outline-light mt-2">Post Now</a>
+      </div>
+    </div>
 
-    .btn-box p {
-      font-size: 0.85rem;
-      margin-top: 8px;
-    }
-  </style>
-</head>
-<body>
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="p-4 bg-dark rounded shadow-sm h-100 border border-warning hover-glow">
+        <h5 class="fw-bold">Profile</h5>
+        <p>Manage your account and see your trade history</p>
+        <a href="/profile" class="btn btn-outline-light mt-2">Go to Profile</a>
+      </div>
+    </div>
 
-  <h1>Welcome to UnlimiTrade!</h1>
-
-  <div class="container">
-    <a class="btn-box" href="/browse">
-      <strong>Browse Items</strong>
-      <p>Check out items currently on the market</p>
-    </a>
-
-    <a class="btn-box" href="/myTrades">
-      <strong>My Trades</strong>
-      <p>View your pending and requested trades</p>
-    </a>
-
-    <a class="btn-box" href="/post">
-      <strong>Post Item</strong>
-      <p>List your items for trade</p>
-    </a>
-
-    <a class="btn-box" href="/profile">
-      <strong>Profile</strong>
-      <p>Manage your account and see your trade history</p>
-    </a>
   </div>
-
-</body>
-</html>
+</main>
